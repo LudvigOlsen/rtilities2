@@ -1,4 +1,4 @@
-library(cvms)
+library(rtilities2)
 context("create_expectations")
 
 test_that("expectation are created properly with create_expectations_data_frame()",{

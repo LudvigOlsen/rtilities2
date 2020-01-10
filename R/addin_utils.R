@@ -1,5 +1,6 @@
 
-
+# TODO Create util for generating expect_error, expect_warning etc.
+# that extracts message and sets fixed = TRUE
 
 # TODO convert package to a general package dev utilities package
 # Can also include base_*select fns and the set_seed utils

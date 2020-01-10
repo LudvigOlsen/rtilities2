@@ -1,5 +1,5 @@
-library(cvms)
-context("utils")
+library(rtilities2)
+context("addin_utils")
 
 test_that("apply_capture() works as expected",{
 
