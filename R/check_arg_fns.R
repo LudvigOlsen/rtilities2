@@ -104,10 +104,13 @@ check_arg_all_uniquely_named <- function(arg,
                                          arg_name,
                                          message_fn) {
   # Check that all are named
-  check_arg_all_named(arg = arg,
-                      check_all_named = check_all_uniquely_named,
-                      arg_name = arg_name,
-                      message_fn = message_fn)
+  arg_all_named <- check_arg_all_named(
+    arg = arg,
+    check_all_named = check_all_uniquely_named,
+    arg_name = arg_name,
+    message_fn = message_fn)
+  if(identical(message_fn, return) && !is.null(arg_all_named)) return(arg_all_named)
+
   # Check that all elements have a unique name
   if (isTRUE(check_all_uniquely_named) &&
       length(unique(non_empty_names(arg))) != length(arg)) {

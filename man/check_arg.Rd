@@ -2,6 +2,7 @@
 % Please edit documentation in R/check_argument.R
 \name{check_arg}
 \alias{check_arg}
+\alias{check_arg_str}
 \title{Apply common checks to a passed argument}
 \usage{
 check_arg(
@@ -19,6 +20,8 @@ check_arg(
   type_name = NULL,
   message_fn = stop
 )
+
+check_arg_str(..., message_fn = return)
 }
 \arguments{
 \item{arg}{The variable to apply the checks to.
@@ -66,14 +69,19 @@ If \code{NULL}, it is inferred via \code{deparse(substitute(arg))}.}
 \item{type_name}{Name of the type(s) checked for with \code{type_check_fn}, for improved error messaging.
 If \code{NULL}, it may be inferred via \code{deparse(substitute(type_check_fn))}.}
 
-\item{message_fn}{Function for communication the error message to the user.
+\item{message_fn}{Function for communicating the error message to the user.
 
-By default, \code{\link[base:stop]{stop()}} is used to throw an error.}
+By default, \code{\link[base:stop]{stop}} is used to throw an error.
+
+The \code{\link[base:return]{return}} function is treated specially: If a check doesn't pass,
+the error message is returned as a string.}
+
+\item{...}{Any argument will be passed directly to \code{check_arg}.}
 }
 \value{
 Throws an error with a suitable error message if any of the checks fail.
 
-Does not return anything.
+Does not return anything by default.
 }
 \description{
 \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
@@ -82,6 +90,11 @@ Apply a set of common checks to a variable,
 like the \strong{type}, \strong{length}, \strong{allowed values}, and whether
 elements are \strong{named} properly.
 }
+\section{Functions}{
+\itemize{
+\item \code{check_arg_str}: Wrapper for returning the message as a string.
+}}
+
 \author{
 Ludvig Renbo Olsen, \email{r-pkgs@ludvigolsen.dk}
 }

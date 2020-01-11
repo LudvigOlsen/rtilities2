@@ -5,6 +5,7 @@
 #'  Apply a set of common checks to a variable,
 #'  like the \strong{type}, \strong{length}, \strong{allowed values}, and whether
 #'  elements are \strong{named} properly.
+#' @param ... Any argument will be passed directly to \code{check_arg}.
 #' @param arg The variable to apply the checks to.
 #'  Can for instance be used to check the input of a function argument.
 #' @param type_check_fn Function for checking the type of \code{arg}.
@@ -38,14 +39,17 @@
 #'  If \code{NULL}, it is inferred via \code{deparse(substitute(arg))}.
 #' @param type_name Name of the type(s) checked for with \code{type_check_fn}, for improved error messaging.
 #'  If \code{NULL}, it may be inferred via \code{deparse(substitute(type_check_fn))}.
-#' @param message_fn Function for communication the error message to the user.
+#' @param message_fn Function for communicating the error message to the user.
 #'
-#'  By default, \code{\link[base:stop]{stop()}} is used to throw an error.
+#'  By default, \code{\link[base:stop]{stop}} is used to throw an error.
+#'
+#'  The \code{\link[base:return]{return}} function is treated specially: If a check doesn't pass,
+#'  the error message is returned as a string.
 #' @author Ludvig Renbo Olsen, \email{r-pkgs@@ludvigolsen.dk}
 #' @export
 #' @return Throws an error with a suitable error message if any of the checks fail.
 #'
-#'  Does not return anything.
+#'  Does not return anything by default.
 check_arg <- function(arg,
                       type_check_fn = NULL,
                       has_length = NULL,
@@ -85,20 +89,32 @@ check_arg <- function(arg,
   # Add '' around arg_name
   arg_name <- paste0("'", arg_name, "'")
 
+  # return() is a special message_fn for returning the string
+  return_string <- identical(message_fn, return)
+
   if (!(isTRUE(allow_null) && is.null(arg))){
 
     # Check if arg is NULL
-    check_arg_not_null(arg = arg, arg_name = arg_name, message_fn = message_fn)
+    arg_not_null <- check_arg_not_null(
+      arg = arg,
+      arg_name = arg_name,
+      message_fn = message_fn)
+    if (!is.null(arg_not_null) && isTRUE(return_string)) return(arg_not_null)
 
     # Check length of arg
-    check_arg_has_length(arg = arg,
-                        has_length = has_length,
-                        arg_name = arg_name,
-                        message_fn = message_fn)
-    check_arg_not_length(arg = arg,
-                         not_length = not_length,
-                         arg_name = arg_name,
-                         message_fn = message_fn)
+    arg_has_length <- check_arg_has_length(
+      arg = arg,
+      has_length = has_length,
+      arg_name = arg_name,
+      message_fn = message_fn)
+    if (!is.null(arg_has_length) && isTRUE(return_string)) return(arg_has_length)
+
+    arg_not_length <- check_arg_not_length(
+      arg = arg,
+      not_length = not_length,
+      arg_name = arg_name,
+      message_fn = message_fn)
+    if (!is.null(arg_not_length) && isTRUE(return_string)) return(arg_not_length)
 
     # Check type
     # TODO Perhaps we want to pass the name of the parent function to the error message?
@@ -116,7 +132,7 @@ check_arg <- function(arg,
       }
     )
 
-    check_arg_type(
+    arg_type <- check_arg_type(
       arg = arg,
       type_check_fn = type_check_fn,
       type_check_fn_name = type_check_fn_name,
@@ -125,39 +141,62 @@ check_arg <- function(arg,
       arg_name = arg_name,
       message_fn = message_fn
     )
+    if (!is.null(arg_type) && isTRUE(return_string)) return(arg_type)
 
     # Check if any values are disallowed
-    check_arg_values_allowed(arg = arg,
-                             allowed_values = allowed_values,
-                             arg_name = arg_name,
-                             message_fn = message_fn)
+    arg_values_allowed <- check_arg_values_allowed(
+      arg = arg,
+      allowed_values = allowed_values,
+      arg_name = arg_name,
+      message_fn = message_fn)
+    if (!is.null(arg_values_allowed) && isTRUE(return_string)) return(arg_values_allowed)
 
     # Check that the values of arg is in numeric range
-    check_arg_in_range(arg = arg,
-                       in_range = in_range,
-                       arg_name = arg_name,
-                       message_fn = message_fn)
+    arg_in_range <- check_arg_in_range(
+      arg = arg,
+      in_range = in_range,
+      arg_name = arg_name,
+      message_fn = message_fn)
+    if (!is.null(arg_in_range) && isTRUE(return_string)) return(arg_in_range)
 
     ## Names
     # TODO Check up on cases where colnames()
     # returns strings but not names()
 
     # Check that arg has no name
-    check_arg_not_named(arg = arg,
-                        check_not_named = check_not_named,
-                        arg_name = arg_name,
-                        message_fn = message_fn)
+    arg_not_named <- check_arg_not_named(
+      arg = arg,
+      check_not_named = check_not_named,
+      arg_name = arg_name,
+      message_fn = message_fn)
+    if (!is.null(arg_not_named) && isTRUE(return_string)) return(arg_not_named)
+
     # Check that all elements have names
-    check_arg_all_named(arg = arg,
-                        check_all_named = check_all_named,
-                        arg_name = arg_name,
-                        message_fn = message_fn)
+    arg_all_named <- check_arg_all_named(
+      arg = arg,
+      check_all_named = check_all_named,
+      arg_name = arg_name,
+      message_fn = message_fn)
+    if (!is.null(arg_all_named) && isTRUE(return_string)) return(arg_all_named)
+
     # Check that all elements have a unique name
-    check_arg_all_uniquely_named(arg = arg,
-                                 check_all_uniquely_named = check_all_uniquely_named,
-                                 arg_name = arg_name,
-                                 message_fn = message_fn)
+    arg_all_uniquely_named <- check_arg_all_uniquely_named(
+      arg = arg,
+      check_all_uniquely_named = check_all_uniquely_named,
+      arg_name = arg_name,
+      message_fn = message_fn)
+    if (!is.null(arg_all_uniquely_named) && isTRUE(return_string)) return(arg_all_uniquely_named)
 
   }
+
+}
+
+
+
+
+#' @describeIn check_arg Wrapper for returning the message as a string.
+check_arg_str <- function(..., message_fn = return){
+  # Wrapper for returning error message as string
+  check_arg(..., message_fn = message_fn)
 }
 
