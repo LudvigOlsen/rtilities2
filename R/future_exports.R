@@ -52,14 +52,6 @@ is_between_ <- function(x, a, b) {
 }
 
 
-# Add underscore until var name is unique
-create_tmp_var <- function(data, tmp_var = ".tmp_index_"){
-  while (tmp_var %in% colnames(data)){
-    tmp_var <- paste0(tmp_var, "_")
-  }
-  tmp_var
-}
-
 # Used for checking warnings in testthat
 # Why?:
 # I had a case where test() used '' but console outputted ‘’

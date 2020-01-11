@@ -71,16 +71,28 @@ check_arg_not_null <- function(arg, arg_name, message_fn){
   }
 }
 
-check_arg_has_length <- function(arg, has_length, arg_name, message_fn){
-  if (!is.null(has_length) && length(arg) != has_length){
-    message_fn(paste0(arg_name, " had length ", length(arg),
-                " but must have length ", has_length, "."))
+check_arg_has_length <- function(arg,
+                                 has_length,
+                                 length_fn,
+                                 length_name,
+                                 arg_name,
+                                 message_fn) {
+
+  if (!is.null(has_length) && length_fn(arg) != has_length){
+    message_fn(paste0(arg_name, " had a ", length_name, " of ", length_fn(arg),
+                      " but must have a ", length_name, " of ", has_length, "."))
   }
 }
 
-check_arg_not_length <- function(arg, not_length, arg_name, message_fn){
-  if (!is.null(not_length) && length(arg) == not_length){
-    message_fn(paste0(arg_name, " cannot have length ", not_length, "."))
+check_arg_not_length <- function(arg,
+                                 not_length,
+                                 length_fn,
+                                 length_name,
+                                 arg_name,
+                                 message_fn){
+  if (!is.null(not_length) && length_fn(arg) == not_length){
+    message_fn(paste0(arg_name, " cannot have a ",
+                      length_name, " of ", not_length, "."))
   }
 }
 
@@ -90,8 +102,11 @@ check_arg_not_named <- function(arg, check_not_named, arg_name, message_fn) {
   }
 }
 
+# Remove NAs and empty "" names
 non_empty_names <- function(x){
-  names(x)[names(x) != ""]
+  ns <- names(x)
+  ns <- ns[!is.na(ns)]
+  ns[nzchar(ns, keepNA = TRUE)]
 }
 
 check_arg_all_named <- function(arg, check_all_named, arg_name, message_fn) {

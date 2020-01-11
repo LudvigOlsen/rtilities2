@@ -15,6 +15,18 @@
 #'  consider passing \code{type_name} as well, for better error messages.
 #' @param has_length A length to check against. Throws an error if \code{arg} has a \emph{different} length.
 #' @param not_length A length to check against. Throw an error if \code{arg} has \emph{this} length.
+#' @param length_fn Function for computing length, like
+#'  \code{\link[base:length]{length()}}, \code{\link[base:nrow]{nrow()}},
+#'  \code{\link[base:ncol]{ncol()}}, or \code{\link[base:nchar]{nchar()}}.
+#'
+#'  Consider passing a \code{length_name}, so the error message is meaningful.
+#' @param length_name Name of the length measure for the error message. (Character)
+#'
+#'  Default values depend on the supplied \code{length_fn}:
+#'  "row count" for \code{\link[base:nrow]{nrow()}},
+#'  "column count" for \code{\link[base:ncol]{ncol()}},
+#'  "character count" for \code{\link[base:nchar]{nchar()}} and
+#'  "length" for anything else, including \code{\link[base:length]{length()}}.
 #' @param allowed_values The values that \code{arg} is allowed to contain.
 #'
 #'  This check is implemented by applying \code{\link[base:setdiff]{setdiff()}}
@@ -65,6 +77,7 @@
 #' # Check the variables
 #' check_arg(x) # passes
 #' check_arg(x, has_length = 6) # fails due to wrong length
+#' check_arg(z, has_length = 4, length_fn = nrow) # fails due to wrong row count
 #' check_arg(y, type_check_fn = is.numeric) # fails due to wrong type
 #' check_arg(y, type_check_fn = is.numeric, type_name = "numeric") # fails due to wrong type
 #' check_arg(z, check_not_named = TRUE) # fails due to names
@@ -88,6 +101,7 @@ check_arg <- function(arg,
                       type_check_fn = NULL,
                       has_length = NULL,
                       not_length = NULL,
+                      length_fn = length,
                       allowed_values = NULL,
                       in_range = NULL,
                       allowed_names = NULL,
@@ -95,9 +109,11 @@ check_arg <- function(arg,
                       check_not_named = FALSE,
                       check_all_named = FALSE,
                       check_all_uniquely_named = FALSE,
-                      allow_null = TRUE,
+                      allow_null = TRUE, # TODO What if an element is NULL?
+                      #allow_na = FALSE, # TODO Add way to check NA
                       arg_name = NULL,
                       type_name = NULL,
+                      length_name = NULL,
                       message_fn = stop){
 
   # Get current frame for extracting argument names
@@ -137,10 +153,24 @@ check_arg <- function(arg,
       message_fn = message_fn)
     if (!is.null(arg_not_null) && isTRUE(return_string)) return(arg_not_null)
 
+    if (is.null(length_name)){
+      length_name <- dplyr::case_when(
+        identical(length_fn, length) ~ "length",
+        identical(length_fn, ncol) ~ "column count",
+        identical(length_fn, NCOL) ~ "column count",
+        identical(length_fn, nrow) ~ "row count",
+        identical(length_fn, NROW) ~ "row count",
+        identical(length_fn, nchar) ~ "character count",
+        TRUE ~ "length"
+      )
+    }
+
     # Check length of arg
     arg_has_length <- check_arg_has_length(
       arg = arg,
       has_length = has_length,
+      length_fn = length_fn,
+      length_name = length_name,
       arg_name = arg_name,
       message_fn = message_fn)
     if (!is.null(arg_has_length) && isTRUE(return_string)) return(arg_has_length)
@@ -148,6 +178,8 @@ check_arg <- function(arg,
     arg_not_length <- check_arg_not_length(
       arg = arg,
       not_length = not_length,
+      length_fn = length_fn,
+      length_name = length_name,
       arg_name = arg_name,
       message_fn = message_fn)
     if (!is.null(arg_not_length) && isTRUE(return_string)) return(arg_not_length)

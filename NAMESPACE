@@ -2,6 +2,7 @@
 
 export("%ni%")
 export(check_arg)
+export(create_tmp_name)
 export(dputSelectedAddin)
 export(insertExpectationsAddin)
 export(insertPipeAddin)

@@ -86,19 +86,19 @@ test_that("check_arg_str() works outside functions on vectors",{
   expect_invisible(check_arg_str(arg = char_vec, has_length = 5))
   expect_invisible(check_arg_str(arg = nll, has_length = 5))
   expect_equal(check_arg_str(arg = char_vec, has_length = 4),
-               "'char_vec' had length 5 but must have length 4.",
+               "'char_vec' had a length of 5 but must have a length of 4.",
                )
   expect_equal(check_arg_str(arg = char_vec, has_length = 4, arg_nam = "differentName"),
-               "'differentName' had length 5 but must have length 4.",
+               "'differentName' had a length of 5 but must have a length of 4.",
                )
 
   expect_invisible(check_arg_str(arg = char_vec, not_length = 10))
   expect_invisible(check_arg_str(arg = nll, not_length = 5))
   expect_equal(check_arg_str(arg = char_vec, not_length = 5),
-               "'char_vec' cannot have length 5.",
+               "'char_vec' cannot have a length of 5.",
                )
   expect_equal(check_arg_str(arg = char_vec, not_length = 5, arg_nam = "differentName"),
-               "'differentName' cannot have length 5.",
+               "'differentName' cannot have a length of 5.",
                )
 
   #### Allowed values ####

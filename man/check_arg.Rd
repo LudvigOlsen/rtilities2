@@ -10,6 +10,7 @@ check_arg(
   type_check_fn = NULL,
   has_length = NULL,
   not_length = NULL,
+  length_fn = length,
   allowed_values = NULL,
   in_range = NULL,
   allowed_names = NULL,
@@ -20,6 +21,7 @@ check_arg(
   allow_null = TRUE,
   arg_name = NULL,
   type_name = NULL,
+  length_name = NULL,
   message_fn = stop
 )
 
@@ -38,6 +40,12 @@ consider passing \code{type_name} as well, for better error messages.}
 \item{has_length}{A length to check against. Throws an error if \code{arg} has a \emph{different} length.}
 
 \item{not_length}{A length to check against. Throw an error if \code{arg} has \emph{this} length.}
+
+\item{length_fn}{Function for computing length, like
+\code{\link[base:length]{length()}}, \code{\link[base:nrow]{nrow()}},
+\code{\link[base:ncol]{ncol()}}, or \code{\link[base:nchar]{nchar()}}.
+
+Consider passing a \code{length_name}, so the error message is meaningful.}
 
 \item{allowed_values}{The values that \code{arg} is allowed to contain.
 
@@ -74,6 +82,14 @@ If \code{NULL}, it is inferred via \code{deparse(substitute(arg))}.}
 
 \item{type_name}{Name of the type(s) checked for with \code{type_check_fn}, for improved error messaging.
 If \code{NULL}, it may be inferred via \code{deparse(substitute(type_check_fn))}.}
+
+\item{length_name}{Name of the length measure for the error message. (Character)
+
+Default values depend on the supplied \code{length_fn}:
+"row count" for \code{\link[base:nrow]{nrow()}},
+"column count" for \code{\link[base:ncol]{ncol()}},
+"character count" for \code{\link[base:nchar]{nchar()}} and
+"length" for anything else, including \code{\link[base:length]{length()}}.}
 
 \item{message_fn}{Function for communicating the error message to the user.
 
@@ -114,6 +130,7 @@ n <- NULL
 # Check the variables
 check_arg(x) # passes
 check_arg(x, has_length = 6) # fails due to wrong length
+check_arg(z, has_length = 4, length_fn = nrow) # fails due to wrong row count
 check_arg(y, type_check_fn = is.numeric) # fails due to wrong type
 check_arg(y, type_check_fn = is.numeric, type_name = "numeric") # fails due to wrong type
 check_arg(z, check_not_named = TRUE) # fails due to names

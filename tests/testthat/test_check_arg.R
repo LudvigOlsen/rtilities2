@@ -88,22 +88,23 @@ test_that("check_arg() works outside functions on vectors",{
 
   #### Length errors ####
 
+  # length()
   expect_invisible(check_arg(arg = char_vec, has_length = 5))
   expect_invisible(check_arg(arg = nll, has_length = 5))
   expect_error(check_arg(arg = char_vec, has_length = 4),
-               "'char_vec' had length 5 but must have length 4.",
+               "'char_vec' had a length of 5 but must have a length of 4.",
                fixed = TRUE)
   expect_error(check_arg(arg = char_vec, has_length = 4, arg_name = "differentName"),
-               "'differentName' had length 5 but must have length 4.",
+               "'differentName' had a length of 5 but must have a length of 4.",
                fixed = TRUE)
 
   expect_invisible(check_arg(arg = char_vec, not_length = 10))
   expect_invisible(check_arg(arg = nll, not_length = 5))
   expect_error(check_arg(arg = char_vec, not_length = 5),
-               "'char_vec' cannot have length 5.",
+               "'char_vec' cannot have a length of 5.",
                fixed = TRUE)
   expect_error(check_arg(arg = char_vec, not_length = 5, arg_name = "differentName"),
-               "'differentName' cannot have length 5.",
+               "'differentName' cannot have a length of 5.",
                fixed = TRUE)
 
   #### Allowed values ####
@@ -288,7 +289,11 @@ test_that("check_arg() works outside functions on data frames",{
   expect_invisible(check_arg(num_df, type_check_fn = check_val_types_numeric))
   expect_invisible(check_arg(fact_df, type_check_fn = check_val_types_factor))
   expect_invisible(check_arg(num_df, has_length = 2)) # 2 columns
+  expect_invisible(check_arg(num_df, has_length = 2, length_fn = ncol)) # 2 columns
   expect_invisible(check_arg(num_df, not_length = 10))
+  expect_invisible(check_arg(num_df, not_length = 10, length_fn = ncol))
+  expect_invisible(check_arg(num_df, has_length = 3, length_fn = nrow))
+  expect_invisible(check_arg(num_df, not_length = 10, length_fn = nrow))
   expect_invisible(check_arg(num_df, allowed_values = c(1,2,3,4,5,6)))
   expect_invisible(check_arg(fact_df, allowed_values = c(1,2,3,4,5,6)))
   expect_invisible(check_arg(fact2_df, allowed_values = c(10,20,30,40,50,60)))
@@ -310,10 +315,35 @@ test_that("check_arg() works outside functions on data frames",{
 
   # length
   expect_error(check_arg(num_df, has_length = 10),
-               "'num_df' had length 2 but must have length 10.",
+               "'num_df' had a length of 2 but must have a length of 10.",
                fixed = TRUE)
   expect_error(check_arg(num_df, not_length = 2),
-               "'num_df' cannot have length 2.",
+               "'num_df' cannot have a length of 2.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, has_length = 10, length_fn = length),
+               "'num_df' had a length of 2 but must have a length of 10.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, not_length = 2, length_fn = length),
+               "'num_df' cannot have a length of 2.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, has_length = 10, length_fn = ncol,
+                         length_name = "column count"),
+               "'num_df' had a column count of 2 but must have a column count of 10.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, not_length = 2, length_fn = ncol,
+                         length_name = "column count"),
+               "'num_df' cannot have a column count of 2.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, has_length = 10, length_fn = nrow,
+                         length_name = "row count"),
+               "'num_df' had a row count of 3 but must have a row count of 10.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, not_length = 3, length_fn = nrow,
+                         length_name = "row count"),
+               "'num_df' cannot have a row count of 3.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, not_length = 3, length_fn = nrow),
+               "'num_df' cannot have a row count of 3.",
                fixed = TRUE)
 
   # allowed values
@@ -422,10 +452,10 @@ test_that("check_arg() works outside functions on tibbles",{
 
   # length
   expect_error(check_arg(num_df, has_length = 10),
-               "num_df' had length 2 but must have length 10.",
+               "num_df' had a length of 2 but must have a length of 10.",
                fixed = TRUE)
   expect_error(check_arg(num_df, not_length = 2),
-               "num_df' cannot have length 2.",
+               "num_df' cannot have a length of 2.",
                fixed = TRUE)
 
   # allowed values
@@ -523,10 +553,10 @@ test_that("check_arg() works outside functions on data tables",{
 
   # length
   expect_error(check_arg(num_df, has_length = 10),
-               "num_df' had length 2 but must have length 10.",
+               "num_df' had a length of 2 but must have a length of 10.",
                fixed = TRUE)
   expect_error(check_arg(num_df, not_length = 2),
-               "num_df' cannot have length 2.",
+               "num_df' cannot have a length of 2.",
                fixed = TRUE)
 
   # allowed values
