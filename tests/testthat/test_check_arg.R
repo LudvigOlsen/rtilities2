@@ -155,6 +155,7 @@ test_that("check_arg() works outside functions on vectors",{
   # Numeric
   expect_invisible(check_arg(arg = float_vec, in_range = c(min(float_vec),max(float_vec))))
   expect_invisible(check_arg(arg = float_vec, in_range = c(min(float_vec)-1,max(float_vec)+1)))
+  expect_invisible(check_arg(arg = float_vec, in_range = c(max(float_vec), min(float_vec))))
   expect_error(check_arg(arg = float_vec, in_range = c("a","b")),
                "Cannot check numeric range when 'in_range' is not numeric.",
                fixed = TRUE)
@@ -162,21 +163,17 @@ test_that("check_arg() works outside functions on vectors",{
                "Cannot check numeric range when 'arg' is not numeric.",
                fixed = TRUE)
   expect_error(check_arg(arg = float_vec, in_range = c(min(float_vec), max(float_vec)-1)),
-               "'float_vec' contained element outside the allowed numeric range.",
+               "'float_vec' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
   expect_error(check_arg(arg = float_vec, in_range = c(min(float_vec)+1, max(float_vec))),
-               "'float_vec' contained element outside the allowed numeric range.",
+               "'float_vec' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
   expect_error(check_arg(arg = float_vec, in_range = c(min(float_vec)+1, max(float_vec)-1)),
-               "'float_vec' contained element outside the allowed numeric range.",
+               "'float_vec' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
   expect_error(check_arg(arg = float_vec, in_range = c(min(float_vec)+1, max(float_vec)-1), arg_nam = "differentName"),
-               "'differentName' contained element outside the allowed numeric range.",
+               "'differentName' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
-  expect_error(check_arg(arg = float_vec, in_range = c(max(float_vec), min(float_vec))),
-               "'float_vec' contained element outside the allowed numeric range.",
-               fixed = TRUE)
-
 
   # Integer
   expect_invisible(check_arg(arg = int_vec, in_range = c(min(int_vec),max(int_vec))))
@@ -185,19 +182,16 @@ test_that("check_arg() works outside functions on vectors",{
                "Cannot check numeric range when 'in_range' is not numeric.",
                fixed = TRUE)
   expect_error(check_arg(arg = int_vec, in_range = c(min(int_vec), max(int_vec)-1)),
-               "'int_vec' contained element outside the allowed numeric range.",
+               "'int_vec' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
   expect_error(check_arg(arg = int_vec, in_range = c(min(int_vec)+1, max(int_vec))),
-               "'int_vec' contained element outside the allowed numeric range.",
+               "'int_vec' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
   expect_error(check_arg(arg = int_vec, in_range = c(min(int_vec)+1, max(int_vec)-1)),
-               "'int_vec' contained element outside the allowed numeric range.",
+               "'int_vec' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
   expect_error(check_arg(arg = int_vec, in_range = c(min(int_vec)+1, max(int_vec)-1), arg_nam = "differentName"),
-               "'differentName' contained element outside the allowed numeric range.",
-               fixed = TRUE)
-  expect_error(check_arg(arg = int_vec, in_range = c(max(int_vec), min(int_vec))),
-               "'int_vec' contained element outside the allowed numeric range.",
+               "'differentName' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
 
   # Numeric factor
@@ -238,7 +232,7 @@ test_that("check_arg() works outside functions on vectors",{
                "'namedFloatVec' contained unnamed elements.",
                fixed = TRUE)
   expect_error(check_arg(arg = setNames(float_vec,c("a","a","c","d","e")), check_all_uniquely_named = TRUE, arg_nam = "namedFloatVec"),
-               "'namedFloatVec' contained duplicate element names.",
+               "'namedFloatVec' contained duplicate names.",
                fixed = TRUE)
 
 
@@ -246,7 +240,297 @@ test_that("check_arg() works outside functions on vectors",{
 
 # TODO test_that("check_arg() works outside functions on lists",{})
 
-# TODO test_that("check_arg() works outside functions on data frames",{})
+test_that("check_arg() works outside functions on data frames",{
+
+  num_df <- data.frame("a" = c(1,2,3), "b" = c(4,5,6))
+  fact_df <- data.frame("a" = factor(c(1,2,3)),
+                        "b" = factor(c(4,5,6)))
+  fact2_df <- data.frame("a" = factor(c(10,20,30)),
+                        "b" = factor(c(40,50,60)))
+  char_df <- data.frame("a" = c("a","b","c"),
+                        "b" = c("d","e","f"), stringsAsFactors = FALSE)
+
+  check_val_types_numeric <- function(x){
+    is.numeric(unlist(x, recursive = TRUE, use.names = FALSE))}
+  check_val_types_factor <- function(x){
+    is.factor(unlist(x, recursive = TRUE, use.names = FALSE))}
+
+  # Expected to work
+  expect_invisible(check_arg(num_df, type_check_fn = is.data.frame))
+  expect_invisible(check_arg(num_df, type_check_fn = is.list))
+  expect_invisible(check_arg(num_df, type_check_fn = check_val_types_numeric))
+  expect_invisible(check_arg(fact_df, type_check_fn = check_val_types_factor))
+  expect_invisible(check_arg(num_df, has_length = 2)) # 2 columns
+  expect_invisible(check_arg(num_df, not_length = 10))
+  expect_invisible(check_arg(num_df, allowed_values = c(1,2,3,4,5,6)))
+  expect_invisible(check_arg(fact_df, allowed_values = c(1,2,3,4,5,6)))
+  expect_invisible(check_arg(fact2_df, allowed_values = c(10,20,30,40,50,60)))
+  expect_invisible(check_arg(char_df, allowed_values = letters))
+  expect_invisible(check_arg(num_df, in_range = c(1,6)))
+  expect_invisible(check_arg(num_df, check_all_named = TRUE))
+  expect_invisible(check_arg(num_df, check_all_uniquely_named = TRUE))
+
+  # Type
+  expect_error(check_arg(num_df, type_check_fn = is.numeric),
+               "'num_df' did not have the right type, as checked with is.numeric().",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, type_check_fn = check_val_types_numeric),
+               "'char_df' did not have the right type, as checked with check_val_types_numeric().",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, type_check_fn = check_val_types_factor),
+               "'char_df' did not have the right type, as checked with check_val_types_factor().",
+               fixed = TRUE)
+
+  # length
+  expect_error(check_arg(num_df, has_length = 10),
+               "num_df' had length 2 but must have length 10.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, not_length = 2),
+               "num_df' cannot have length 2.",
+               fixed = TRUE)
+
+  # allowed values
+  expect_error(check_arg(num_df, allowed_values = c(10,20,30)),
+               "num_df' contained 6 unique disallowed values: 1, 2, 3, ...",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, allowed_values = c(1,2,4)),
+               "num_df' contained 3 unique disallowed values: 3, 5, 6.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, allowed_values = c(1,2,4)),
+               "num_df' contained 3 unique disallowed values: 3, 5, 6.",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, allowed_values = c(1,2,4)),
+               "char_df' contained 6 unique disallowed values: a, b, c, ...",
+               fixed = TRUE)
+  expect_error(check_arg(fact2_df, allowed_values = c(10,20,40)),
+               "'fact2_df' contained 3 unique disallowed values: 30, 50, 60.",
+               fixed = TRUE)
+
+  # in range
+  expect_error(check_arg(num_df, in_range = c(3,5)),
+               "num_df' contained element with value outside the allowed numeric range.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, in_range = c(0,5)),
+               "num_df' contained element with value outside the allowed numeric range.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, in_range = c(3,7)),
+               "num_df' contained element with value outside the allowed numeric range.",
+               fixed = TRUE)
+  expect_error(check_arg(fact2_df, in_range = c(3,7)),
+               "Cannot check numeric range when 'arg' is not numeric.",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, in_range = c(3,7)),
+               "Cannot check numeric range when 'arg' is not numeric.",
+               fixed = TRUE)
+
+  # names
+  expect_error(check_arg(num_df, check_not_named = TRUE),
+               "num_df' must not contain named elements.",
+               fixed = TRUE)
+  colnames(num_df) <- c("a","a")
+  expect_error(check_arg(num_df, check_all_uniquely_named = TRUE),
+               "num_df' contained duplicate names.",
+               fixed = TRUE)
+
+})
+test_that("check_arg() works outside functions on tibbles",{
+
+  num_df <- tibble::tibble("a" = c(1,2,3), "b" = c(4,5,6))
+  fact_df <- tibble::tibble("a" = factor(c(1,2,3)),
+                        "b" = factor(c(4,5,6)))
+  fact2_df <- tibble::tibble("a" = factor(c(10,20,30)),
+                         "b" = factor(c(40,50,60)))
+  char_df <- tibble::tibble("a" = c("a","b","c"),
+                        "b" = c("d","e","f"))
+  nested_df <- tibble::tibble("a" = c("a","b","c"),
+                              "b" = c("d","e","f"),
+                              "n" = list(tibble::tibble("n1" = c(1,2,3), "n2" = c(3,4,5)),
+                                         tibble::tibble("n1" = c("a","b","c"), "n2" = c("d","e","f")),
+                                         tibble::tibble("n1" = factor(c(1,2,3)), "n2" = factor(c(3,4,5)))))
+
+  check_val_types_numeric <- function(x){
+    is.numeric(unlist(x, recursive = TRUE, use.names = FALSE))}
+  check_val_types_character <- function(x){
+    is.character(unlist(x, recursive = TRUE, use.names = FALSE))}
+  check_val_types_factor <- function(x){
+    is.factor(unlist(x, recursive = TRUE, use.names = FALSE))}
+
+  # Expected to work
+  expect_invisible(check_arg(num_df, type_check_fn = is.data.frame))
+  expect_invisible(check_arg(nested_df, type_check_fn = is.data.frame))
+  expect_invisible(check_arg(num_df, type_check_fn = is.list))
+  expect_invisible(check_arg(num_df, type_check_fn = check_val_types_numeric))
+  expect_invisible(check_arg(fact_df, type_check_fn = check_val_types_factor))
+  expect_invisible(check_arg(nested_df[c(2),], type_check_fn = check_val_types_character))
+  expect_invisible(check_arg(num_df, has_length = 2)) # 2 columns
+  expect_invisible(check_arg(num_df, not_length = 10))
+  expect_invisible(check_arg(num_df, allowed_values = c(1,2,3,4,5,6)))
+  expect_invisible(check_arg(fact_df, allowed_values = c(1,2,3,4,5,6)))
+  expect_invisible(check_arg(fact2_df, allowed_values = c(10,20,30,40,50,60)))
+  expect_invisible(check_arg(char_df, allowed_values = letters))
+  expect_invisible(check_arg(num_df, in_range = c(1,6)))
+  expect_invisible(check_arg(num_df, check_all_named = TRUE))
+  expect_invisible(check_arg(num_df, check_all_uniquely_named = TRUE))
+
+  # Type
+  expect_error(check_arg(num_df, type_check_fn = is.numeric),
+               "'num_df' did not have the right type, as checked with is.numeric().",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, type_check_fn = check_val_types_numeric),
+               "'char_df' did not have the right type, as checked with check_val_types_numeric().",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, type_check_fn = check_val_types_factor),
+               "'char_df' did not have the right type, as checked with check_val_types_factor().",
+               fixed = TRUE)
+  expect_error(check_arg(nested_df, type_check_fn = check_val_types_character),
+               "'nested_df' did not have the right type, as checked with check_val_types_character().",
+               fixed = TRUE)
+
+  # length
+  expect_error(check_arg(num_df, has_length = 10),
+               "num_df' had length 2 but must have length 10.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, not_length = 2),
+               "num_df' cannot have length 2.",
+               fixed = TRUE)
+
+  # allowed values
+  expect_error(check_arg(num_df, allowed_values = c(10,20,30)),
+               "num_df' contained 6 unique disallowed values: 1, 2, 3, ...",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, allowed_values = c(1,2,4)),
+               "num_df' contained 3 unique disallowed values: 3, 5, 6.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, allowed_values = c(1,2,4)),
+               "num_df' contained 3 unique disallowed values: 3, 5, 6.",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, allowed_values = c(1,2,4)),
+               "char_df' contained 6 unique disallowed values: a, b, c, ...",
+               fixed = TRUE)
+  expect_error(check_arg(fact2_df, allowed_values = c(10,20,40)),
+               "'fact2_df' contained 3 unique disallowed values: 30, 50, 60.",
+               fixed = TRUE)
+
+  # in range
+  expect_error(check_arg(num_df, in_range = c(3,5)),
+               "num_df' contained element with value outside the allowed numeric range.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, in_range = c(0,5)),
+               "num_df' contained element with value outside the allowed numeric range.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, in_range = c(3,7)),
+               "num_df' contained element with value outside the allowed numeric range.",
+               fixed = TRUE)
+  expect_error(check_arg(fact2_df, in_range = c(3,7)),
+               "Cannot check numeric range when 'arg' is not numeric.",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, in_range = c(3,7)),
+               "Cannot check numeric range when 'arg' is not numeric.",
+               fixed = TRUE)
+
+  # names
+  expect_error(check_arg(num_df, check_not_named = TRUE),
+               "num_df' must not contain named elements.",
+               fixed = TRUE)
+  colnames(num_df) <- c("a","a")
+  expect_error(check_arg(num_df, check_all_uniquely_named = TRUE),
+               "num_df' contained duplicate names.",
+               fixed = TRUE)
+
+})
+test_that("check_arg() works outside functions on data tables",{
+
+  num_df <- data.table::data.table("a" = c(1,2,3), "b" = c(4,5,6))
+  fact_df <- data.table::data.table("a" = factor(c(1,2,3)),
+                            "b" = factor(c(4,5,6)))
+  fact2_df <- data.table::data.table("a" = factor(c(10,20,30)),
+                             "b" = factor(c(40,50,60)))
+  char_df <- data.table::data.table("a" = c("a","b","c"),
+                            "b" = c("d","e","f"))
+
+  check_val_types_numeric <- function(x){
+    is.numeric(unlist(x, recursive = TRUE, use.names = FALSE))}
+  check_val_types_factor <- function(x){
+    is.factor(unlist(x, recursive = TRUE, use.names = FALSE))}
+
+  # Expected to work
+  expect_invisible(check_arg(num_df, type_check_fn = is.data.frame))
+  expect_invisible(check_arg(num_df, type_check_fn = is.list))
+  expect_invisible(check_arg(num_df, type_check_fn = check_val_types_numeric))
+  expect_invisible(check_arg(fact_df, type_check_fn = check_val_types_factor))
+  expect_invisible(check_arg(num_df, has_length = 2)) # 2 columns
+  expect_invisible(check_arg(num_df, not_length = 10))
+  expect_invisible(check_arg(num_df, allowed_values = c(1,2,3,4,5,6)))
+  expect_invisible(check_arg(fact_df, allowed_values = c(1,2,3,4,5,6)))
+  expect_invisible(check_arg(fact2_df, allowed_values = c(10,20,30,40,50,60)))
+  expect_invisible(check_arg(char_df, allowed_values = letters))
+  expect_invisible(check_arg(num_df, in_range = c(1,6)))
+  expect_invisible(check_arg(num_df, check_all_named = TRUE))
+  expect_invisible(check_arg(num_df, check_all_uniquely_named = TRUE))
+
+  # Type
+  expect_error(check_arg(num_df, type_check_fn = is.numeric),
+               "'num_df' did not have the right type, as checked with is.numeric().",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, type_check_fn = check_val_types_numeric),
+               "'char_df' did not have the right type, as checked with check_val_types_numeric().",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, type_check_fn = check_val_types_factor),
+               "'char_df' did not have the right type, as checked with check_val_types_factor().",
+               fixed = TRUE)
+
+  # length
+  expect_error(check_arg(num_df, has_length = 10),
+               "num_df' had length 2 but must have length 10.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, not_length = 2),
+               "num_df' cannot have length 2.",
+               fixed = TRUE)
+
+  # allowed values
+  expect_error(check_arg(num_df, allowed_values = c(10,20,30)),
+               "num_df' contained 6 unique disallowed values: 1, 2, 3, ...",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, allowed_values = c(1,2,4)),
+               "num_df' contained 3 unique disallowed values: 3, 5, 6.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, allowed_values = c(1,2,4)),
+               "num_df' contained 3 unique disallowed values: 3, 5, 6.",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, allowed_values = c(1,2,4)),
+               "char_df' contained 6 unique disallowed values: a, b, c, ...",
+               fixed = TRUE)
+  expect_error(check_arg(fact2_df, allowed_values = c(10,20,40)),
+               "'fact2_df' contained 3 unique disallowed values: 30, 50, 60.",
+               fixed = TRUE)
+
+  # in range
+  expect_error(check_arg(num_df, in_range = c(3,5)),
+               "num_df' contained element with value outside the allowed numeric range.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, in_range = c(0,5)),
+               "num_df' contained element with value outside the allowed numeric range.",
+               fixed = TRUE)
+  expect_error(check_arg(num_df, in_range = c(3,7)),
+               "num_df' contained element with value outside the allowed numeric range.",
+               fixed = TRUE)
+  expect_error(check_arg(fact2_df, in_range = c(3,7)),
+               "Cannot check numeric range when 'arg' is not numeric.",
+               fixed = TRUE)
+  expect_error(check_arg(char_df, in_range = c(3,7)),
+               "Cannot check numeric range when 'arg' is not numeric.",
+               fixed = TRUE)
+
+  # names
+  expect_error(check_arg(num_df, check_not_named = TRUE),
+               "num_df' must not contain named elements.",
+               fixed = TRUE)
+  colnames(num_df) <- c("a","a")
+  expect_error(check_arg(num_df, check_all_uniquely_named = TRUE),
+               "num_df' contained duplicate names.",
+               fixed = TRUE)
+
+})
 
 # TODO test_that("check_arg() works outside functions on functions",{})
 

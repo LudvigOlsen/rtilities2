@@ -18,12 +18,17 @@
 #'
 #'  This check is implemented by applying \code{\link[base:setdiff]{setdiff()}}
 #'  to the recursively unlisted values in \code{arg}.
+#'  Note: If \code{arg} contains values of type character, the unlisting will
+#'  convert all elements to type character.
 #' @param in_range The numeric range the values in \code{arg} should lie within.
 #'  Vector with 2 elements: \code{c(min, max)}.
 #'
 #'  1) Throws error if the minimum value in \code{arg} is lower than the first value of \code{in_range}.
 #'
 #'  2) Throws error if the maximum value in \code{arg} is higher than the second value of \code{in_range}.
+#'
+#'  \code{\link[base:range]{range()}} is called on the recursively unlisted values in \code{arg} and
+#'  compared to the sorted \code{in_range}.
 #' @param check_not_named Whether to ensure that \emph{none} of the elements are named. \emph{Not recursive}.
 #' @param check_all_named Whether to ensure that \emph{all} of the elements are named. \emph{Not recursive}.
 #' @param check_all_uniquely_named Whether to ensure that \emph{all} of the elements are \emph{uniquely} named. \emph{Not recursive}.

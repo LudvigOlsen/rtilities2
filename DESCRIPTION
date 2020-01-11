@@ -11,15 +11,16 @@ Description: Provides development utilities,
     including RStudio addins for generating unit tests.
 License: GPL-3
 Imports: 
-    plyr,
     rstudioapi (>= 0.10),
+    testthat (>= 2.3.1),
+    plyr,
     dplyr,
     tibble,
-    testthat (>= 2.3.1),
     lifecycle
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    data.table
 RdMacros: 
     lifecycle
 Encoding: UTF-8

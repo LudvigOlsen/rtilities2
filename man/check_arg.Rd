@@ -37,14 +37,19 @@ consider passing \code{type_name} as well, for better error messages.}
 \item{allowed_values}{The values that \code{arg} is allowed to contain.
 
 This check is implemented by applying \code{\link[base:setdiff]{setdiff()}}
-to the recursively unlisted values in \code{arg}.}
+to the recursively unlisted values in \code{arg}.
+Note: If \code{arg} contains values of type character, the unlisting will
+convert all elements to type character.}
 
 \item{in_range}{The numeric range the values in \code{arg} should lie within.
 Vector with 2 elements: \code{c(min, max)}.
 \enumerate{
 \item Throws error if the minimum value in \code{arg} is lower than the first value of \code{in_range}.
 \item Throws error if the maximum value in \code{arg} is higher than the second value of \code{in_range}.
-}}
+}
+
+\code{\link[base:range]{range()}} is called on the recursively unlisted values in \code{arg} and
+compared to the sorted \code{in_range}.}
 
 \item{check_not_named}{Whether to ensure that \emph{none} of the elements are named. \emph{Not recursive}.}
 
