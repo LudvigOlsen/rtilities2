@@ -16,6 +16,8 @@ Imports:
     plyr,
     dplyr,
     tibble,
+    rlang,
+    utils,
     lifecycle
 Suggests: 
     knitr,

@@ -1,4 +1,4 @@
 library(testthat)
-library(rtestaddins)
+library(rtilities2)
 
-test_check("rtestaddins")
+test_check("rtilities2")

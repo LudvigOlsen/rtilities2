@@ -104,8 +104,8 @@ check_arg <- function(arg,
     # TODO Perhaps we want to pass the name of the parent function to the error message?
     type_check_fn_name <- tryCatch({
       tcfn_name <- deparse(substitute(expr = type_check_fn, env = current_frame))
-      if (nchar(tcfn_name)>9 &&
-          substr(tcfn_name, 1, 9) == "function("){
+      if (!(is.character(tcfn_name) && length(tcfn_name)==1) ||
+          (nchar(tcfn_name)>9 && substr(tcfn_name, 1, 9) == "function(")){
         tcfn_name <- NULL
       }
       tcfn_name

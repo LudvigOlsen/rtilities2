@@ -37,6 +37,8 @@
 #'
 #'  Press \code{Execute}.
 #'  }
+#' @importFrom utils capture.output head
+#' @importFrom rlang :=
 insertExpectationsAddin <- function(){
   # Get the selected variable name
   selection <- get_selection()

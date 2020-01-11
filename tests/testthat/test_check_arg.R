@@ -382,9 +382,7 @@ test_that("check_arg() works outside functions on tibbles",{
   expect_error(check_arg(char_df, type_check_fn = check_val_types_factor),
                "'char_df' did not have the right type, as checked with check_val_types_factor().",
                fixed = TRUE)
-  expect_error(check_arg(nested_df, type_check_fn = check_val_types_character),
-               "'nested_df' did not have the right type, as checked with check_val_types_character().",
-               fixed = TRUE)
+  expect_invisible(check_arg(nested_df, type_check_fn = check_val_types_character)) # Forces all to character when unlisting
 
   # length
   expect_error(check_arg(num_df, has_length = 10),
