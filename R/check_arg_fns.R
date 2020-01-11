@@ -21,7 +21,9 @@ check_arg_type <- function(arg, type_check_fn, type_check_fn_name, type_name, cu
   }
 }
 
-check_arg_values_allowed <- function(arg, allowed_values, arg_name, message_fn) {
+check_arg_values_allowed <- function(arg, allowed_values,
+                                     arg_name, message_fn,
+                                     first_n = 3) {
   # Check if any values are disallowed
   if (!is.null(allowed_values)) {
     included_vals <- unlist(arg, recursive = TRUE, use.names = FALSE)
@@ -31,8 +33,8 @@ check_arg_values_allowed <- function(arg, allowed_values, arg_name, message_fn) 
       message_fn(paste0( arg_name, " contained ",
                    num_disallowed_values,
                    " unique disallowed values: ",
-                   paste0(head(disallowed_values, 3), collapse = ", "),
-                   ifelse(num_disallowed_values > 3, ", ...", ".")
+                   paste0(head(disallowed_values, first_n), collapse = ", "),
+                   ifelse(num_disallowed_values > first_n, ", ...", ".")
       ))
     }
   }
@@ -118,3 +120,48 @@ check_arg_all_uniquely_named <- function(arg,
   }
 }
 
+check_arg_allowed_names <- function(arg,
+                                    allowed_names,
+                                    arg_name,
+                                    message_fn,
+                                    first_n = 3) {
+
+  # Check that all names are allowed
+  if (!is.null(allowed_names)){
+    disallowed_names <- setdiff(non_empty_names(arg), allowed_names)
+    num_disallowed_names <- length(disallowed_names)
+    if (num_disallowed_names > 0){
+      message_fn(paste0(
+        arg_name, " contained ",
+        num_disallowed_names,
+        " unique disallowed names: ",
+        paste0(head(disallowed_names, first_n), collapse = ", "),
+        ifelse(num_disallowed_names > first_n, ", ...", ".")
+      ))
+    }
+  }
+
+}
+
+check_arg_required_names <- function(arg,
+                                     required_names,
+                                     arg_name,
+                                     message_fn,
+                                     first_n = 3) {
+
+  # Check that all required names are in arg
+  if (!is.null(required_names)){
+    missing_names <- setdiff(required_names, non_empty_names(arg))
+    num_missing_names <- length(missing_names)
+    if (num_missing_names > 0){
+      message_fn(paste0(
+        arg_name, " lacked ",
+        num_missing_names,
+        " required names: ",
+        paste0(head(missing_names, first_n), collapse = ", "),
+        ifelse(num_missing_names > first_n, ", ...", ".")
+      ))
+    }
+  }
+
+}

@@ -12,6 +12,8 @@ check_arg(
   not_length = NULL,
   allowed_values = NULL,
   in_range = NULL,
+  allowed_names = NULL,
+  required_names = NULL,
   check_not_named = FALSE,
   check_all_named = FALSE,
   check_all_uniquely_named = FALSE,
@@ -54,6 +56,10 @@ Vector with 2 elements: \code{c(min, max)}.
 \code{\link[base:range]{range()}} is called on the recursively unlisted values in \code{arg} and
 compared to the sorted \code{in_range}.}
 
+\item{allowed_names}{The names that \code{arg} is \emph{allowed} to contain. \emph{Not recursive}.}
+
+\item{required_names}{Names that \emph{must} be in \code{arg}. \emph{Not recursive}.}
+
 \item{check_not_named}{Whether to ensure that \emph{none} of the elements are named. \emph{Not recursive}.}
 
 \item{check_all_named}{Whether to ensure that \emph{all} of the elements are named. \emph{Not recursive}.}
@@ -95,6 +101,39 @@ elements are \strong{named} properly.
 \item \code{check_arg_str}: Wrapper for returning the message as a string.
 }}
 
+\examples{
+# Attach packages
+library(rtilities2)
+
+# Defining a set of variables
+x <- c(1,2,3,4,5)
+y <- c("a","b","d")
+z <- data.frame("o" = c(0,0,0), "u" = c(1,2,3))
+n <- NULL
+\donttest{
+# Check the variables
+check_arg(x) # passes
+check_arg(x, has_length = 6) # fails due to wrong length
+check_arg(y, type_check_fn = is.numeric) # fails due to wrong type
+check_arg(y, type_check_fn = is.numeric, type_name = "numeric") # fails due to wrong type
+check_arg(z, check_not_named = TRUE) # fails due to names
+check_arg(z, allowed_names = c("n","o")) # fails as "u" isn't an allowed name
+check_arg(z, required_names = c("n","o")) # fails due to lack of "n" column
+check_arg(n, allow_null = FALSE) # fails due to being NULL
+check_arg(n, allow_null = TRUE) # passes
+
+# Multiple checks at once
+check_arg(z,
+          type_check_fn = is.data.frame, # passes
+          has_length = 2, # passes
+          required_names = c("o"), # passes
+          in_range = c(1,3)) # fails due to 0s in "o" column
+
+# Error messages as strings
+check_arg_str(x, not_length = 5)
+check_arg(x, not_length = 5, message_fn = return)
+}
+}
 \author{
 Ludvig Renbo Olsen, \email{r-pkgs@ludvigolsen.dk}
 }

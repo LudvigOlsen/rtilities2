@@ -82,7 +82,7 @@ test_that("check_arg() works outside functions on vectors",{
                fixed = TRUE)
 
   # Specify arg_nam
-  expect_error(check_arg(arg = char_vec, type_check_fn = is.numeric, type_name = "numeric", arg_nam = "differentName"),
+  expect_error(check_arg(arg = char_vec, type_check_fn = is.numeric, type_name = "numeric", arg_name = "differentName"),
                "'differentName' must be of type numeric.",
                fixed = TRUE)
 
@@ -93,7 +93,7 @@ test_that("check_arg() works outside functions on vectors",{
   expect_error(check_arg(arg = char_vec, has_length = 4),
                "'char_vec' had length 5 but must have length 4.",
                fixed = TRUE)
-  expect_error(check_arg(arg = char_vec, has_length = 4, arg_nam = "differentName"),
+  expect_error(check_arg(arg = char_vec, has_length = 4, arg_name = "differentName"),
                "'differentName' had length 5 but must have length 4.",
                fixed = TRUE)
 
@@ -102,7 +102,7 @@ test_that("check_arg() works outside functions on vectors",{
   expect_error(check_arg(arg = char_vec, not_length = 5),
                "'char_vec' cannot have length 5.",
                fixed = TRUE)
-  expect_error(check_arg(arg = char_vec, not_length = 5, arg_nam = "differentName"),
+  expect_error(check_arg(arg = char_vec, not_length = 5, arg_name = "differentName"),
                "'differentName' cannot have length 5.",
                fixed = TRUE)
 
@@ -117,7 +117,7 @@ test_that("check_arg() works outside functions on vectors",{
   expect_error(check_arg(arg = char_vec, allowed_values = c("b")),
                "'char_vec' contained 4 unique disallowed values: a, c, d, ...",
                fixed = TRUE)
-  expect_error(check_arg(arg = char_vec, allowed_values = c("b"), arg_nam = "differentName"),
+  expect_error(check_arg(arg = char_vec, allowed_values = c("b"), arg_name = "differentName"),
                "'differentName' contained 4 unique disallowed values: a, c, d, ...",
                fixed = TRUE)
 
@@ -171,7 +171,7 @@ test_that("check_arg() works outside functions on vectors",{
   expect_error(check_arg(arg = float_vec, in_range = c(min(float_vec)+1, max(float_vec)-1)),
                "'float_vec' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
-  expect_error(check_arg(arg = float_vec, in_range = c(min(float_vec)+1, max(float_vec)-1), arg_nam = "differentName"),
+  expect_error(check_arg(arg = float_vec, in_range = c(min(float_vec)+1, max(float_vec)-1), arg_name = "differentName"),
                "'differentName' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
 
@@ -190,7 +190,7 @@ test_that("check_arg() works outside functions on vectors",{
   expect_error(check_arg(arg = int_vec, in_range = c(min(int_vec)+1, max(int_vec)-1)),
                "'int_vec' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
-  expect_error(check_arg(arg = int_vec, in_range = c(min(int_vec)+1, max(int_vec)-1), arg_nam = "differentName"),
+  expect_error(check_arg(arg = int_vec, in_range = c(min(int_vec)+1, max(int_vec)-1), arg_name = "differentName"),
                "'differentName' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
 
@@ -211,30 +211,57 @@ test_that("check_arg() works outside functions on vectors",{
   expect_invisible(check_arg(arg = float_vec, check_not_named = TRUE))
   expect_invisible(check_arg(arg = float_vec, check_not_named = FALSE))
   expect_invisible(check_arg(arg = setNames(float_vec,as.character(float_vec)), check_not_named = FALSE))
-  expect_error(check_arg(arg = setNames(float_vec,as.character(float_vec)), check_not_named = TRUE, arg_nam = "namedFloatVec"),
+  expect_error(check_arg(arg = setNames(float_vec,as.character(float_vec)), check_not_named = TRUE, arg_name = "namedFloatVec"),
                "'namedFloatVec' must not contain named elements.",
                fixed = TRUE)
-  expect_error(check_arg(arg = c(3,4,setNames(float_vec,as.character(float_vec))), check_not_named = TRUE, arg_nam = "namedFloatVec"),
+  expect_error(check_arg(arg = c(3,4,setNames(float_vec,as.character(float_vec))), check_not_named = TRUE, arg_name = "namedFloatVec"),
                "'namedFloatVec' must not contain named elements.",
                fixed = TRUE)
 
   # All named
   expect_invisible(check_arg(arg = float_vec, check_all_named = FALSE))
   expect_invisible(check_arg(arg = setNames(float_vec,as.character(float_vec)), check_all_named = TRUE))
-  expect_error(check_arg(arg = c(3,4,setNames(float_vec,as.character(float_vec))), check_all_named = TRUE, arg_nam = "namedFloatVec"),
+  expect_error(check_arg(arg = c(3,4,setNames(float_vec,as.character(float_vec))), check_all_named = TRUE, arg_name = "namedFloatVec"),
                "'namedFloatVec' contained unnamed elements.",
                fixed = TRUE)
 
-  # check_all_uniquely_named = FALSE,
+  # All Uniquely Named
   expect_invisible(check_arg(arg = float_vec, check_all_uniquely_named = FALSE))
   expect_invisible(check_arg(arg = setNames(float_vec,as.character(float_vec)), check_all_uniquely_named = TRUE))
-  expect_error(check_arg(arg = c(3,4,setNames(float_vec,as.character(float_vec))), check_all_uniquely_named = TRUE, arg_nam = "namedFloatVec"),
+  expect_error(check_arg(arg = c(3,4,setNames(float_vec,as.character(float_vec))), check_all_uniquely_named = TRUE, arg_name = "namedFloatVec"),
                "'namedFloatVec' contained unnamed elements.",
                fixed = TRUE)
-  expect_error(check_arg(arg = setNames(float_vec,c("a","a","c","d","e")), check_all_uniquely_named = TRUE, arg_nam = "namedFloatVec"),
+  expect_error(check_arg(arg = setNames(float_vec,c("a","a","c","d","e")), check_all_uniquely_named = TRUE, arg_name = "namedFloatVec"),
                "'namedFloatVec' contained duplicate names.",
                fixed = TRUE)
 
+  # Allowed names
+  expect_invisible(check_arg(arg = float_vec, allowed_names = c("a", "b")))
+  expect_invisible(check_arg(arg = float_vec, allowed_names = c("a", "")))
+  expect_invisible(check_arg(arg = float_vec, allowed_names = ""))
+  expect_invisible(check_arg(arg = setNames(float_vec,as.character(float_vec)),
+                             allowed_names = as.character(float_vec)))
+  expect_invisible(check_arg(arg = setNames(float_vec,as.character(float_vec)),
+                             allowed_names = c("a","b",as.character(float_vec))))
+  expect_invisible(check_arg(arg = c(3,4,setNames(float_vec,as.character(float_vec))),
+                         allowed_names = as.character(float_vec), arg_name = "namedFloatVec"))
+  expect_error(check_arg(arg = setNames(float_vec,c("a","a","c","d","e")),
+                         allowed_names = c("c","e","f"), arg_name = "namedFloatVec"),
+               "'namedFloatVec' contained 2 unique disallowed names: a, d.",
+               fixed = TRUE)
+
+  # Required names
+  expect_invisible(check_arg(arg = float_vec, required_names = c()))
+  expect_invisible(check_arg(arg = setNames(float_vec,as.character(float_vec)),
+                             required_names = as.character(float_vec)))
+
+  expect_error(check_arg(arg = float_vec, required_names = ""),
+               "'float_vec' lacked 1 required names: .", fixed = TRUE)
+  expect_error(check_arg(arg = setNames(float_vec,as.character(float_vec)),
+                         required_names = c("a","b"), arg_name = "namedFloatVec"),
+               "'namedFloatVec' lacked 2 required names: a, b.", fixed = TRUE)
+  expect_error(check_arg(arg = setNames(float_vec,as.character(float_vec)),
+                         required_names = c(as.character(float_vec),"a","b"), arg_name = "namedFloatVec"))
 
 })
 
@@ -283,24 +310,24 @@ test_that("check_arg() works outside functions on data frames",{
 
   # length
   expect_error(check_arg(num_df, has_length = 10),
-               "num_df' had length 2 but must have length 10.",
+               "'num_df' had length 2 but must have length 10.",
                fixed = TRUE)
   expect_error(check_arg(num_df, not_length = 2),
-               "num_df' cannot have length 2.",
+               "'num_df' cannot have length 2.",
                fixed = TRUE)
 
   # allowed values
   expect_error(check_arg(num_df, allowed_values = c(10,20,30)),
-               "num_df' contained 6 unique disallowed values: 1, 2, 3, ...",
+               "'num_df' contained 6 unique disallowed values: 1, 2, 3, ...",
                fixed = TRUE)
   expect_error(check_arg(num_df, allowed_values = c(1,2,4)),
-               "num_df' contained 3 unique disallowed values: 3, 5, 6.",
+               "'num_df' contained 3 unique disallowed values: 3, 5, 6.",
                fixed = TRUE)
   expect_error(check_arg(num_df, allowed_values = c(1,2,4)),
-               "num_df' contained 3 unique disallowed values: 3, 5, 6.",
+               "'num_df' contained 3 unique disallowed values: 3, 5, 6.",
                fixed = TRUE)
   expect_error(check_arg(char_df, allowed_values = c(1,2,4)),
-               "char_df' contained 6 unique disallowed values: a, b, c, ...",
+               "'char_df' contained 6 unique disallowed values: a, b, c, ...",
                fixed = TRUE)
   expect_error(check_arg(fact2_df, allowed_values = c(10,20,40)),
                "'fact2_df' contained 3 unique disallowed values: 30, 50, 60.",
@@ -308,13 +335,13 @@ test_that("check_arg() works outside functions on data frames",{
 
   # in range
   expect_error(check_arg(num_df, in_range = c(3,5)),
-               "num_df' contained element with value outside the allowed numeric range.",
+               "'num_df' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
   expect_error(check_arg(num_df, in_range = c(0,5)),
-               "num_df' contained element with value outside the allowed numeric range.",
+               "'num_df' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
   expect_error(check_arg(num_df, in_range = c(3,7)),
-               "num_df' contained element with value outside the allowed numeric range.",
+               "'num_df' contained element with value outside the allowed numeric range.",
                fixed = TRUE)
   expect_error(check_arg(fact2_df, in_range = c(3,7)),
                "Cannot check numeric range when 'arg' is not numeric.",
@@ -325,12 +352,21 @@ test_that("check_arg() works outside functions on data frames",{
 
   # names
   expect_error(check_arg(num_df, check_not_named = TRUE),
-               "num_df' must not contain named elements.",
+               "'num_df' must not contain named elements.",
                fixed = TRUE)
   colnames(num_df) <- c("a","a")
   expect_error(check_arg(num_df, check_all_uniquely_named = TRUE),
-               "num_df' contained duplicate names.",
+               "'num_df' contained duplicate names.",
                fixed = TRUE)
+  expect_error(check_arg(num_df, allowed_names = c("b","c","d")),
+               "'num_df' contained 1 unique disallowed names: a.",
+               fixed = TRUE)
+  expect_invisible(check_arg(num_df, allowed_names = c("a")))
+  expect_error(check_arg(num_df, required_names = c("b","c","d")),
+               "'num_df' lacked 3 required names: b, c, d.",
+               fixed = TRUE)
+  expect_invisible(check_arg(num_df, required_names = c("a","a","a")))
+
 
 })
 test_that("check_arg() works outside functions on tibbles",{
@@ -434,6 +470,14 @@ test_that("check_arg() works outside functions on tibbles",{
   expect_error(check_arg(num_df, check_all_uniquely_named = TRUE),
                "num_df' contained duplicate names.",
                fixed = TRUE)
+  expect_error(check_arg(num_df, allowed_names = c("b","c","d")),
+               "'num_df' contained 1 unique disallowed names: a.",
+               fixed = TRUE)
+  expect_invisible(check_arg(num_df, allowed_names = c("a")))
+  expect_error(check_arg(num_df, required_names = c("b","c","d")),
+               "'num_df' lacked 3 required names: b, c, d.",
+               fixed = TRUE)
+  expect_invisible(check_arg(num_df, required_names = c("a","a","a")))
 
 })
 test_that("check_arg() works outside functions on data tables",{
@@ -527,6 +571,14 @@ test_that("check_arg() works outside functions on data tables",{
   expect_error(check_arg(num_df, check_all_uniquely_named = TRUE),
                "num_df' contained duplicate names.",
                fixed = TRUE)
+  expect_error(check_arg(num_df, allowed_names = c("b","c","d")),
+               "'num_df' contained 1 unique disallowed names: a.",
+               fixed = TRUE)
+  expect_invisible(check_arg(num_df, allowed_names = c("a")))
+  expect_error(check_arg(num_df, required_names = c("b","c","d")),
+               "'num_df' lacked 3 required names: b, c, d.",
+               fixed = TRUE)
+  expect_invisible(check_arg(num_df, required_names = c("a","a","a")))
 
 })
 

@@ -56,4 +56,28 @@ test_that("multicheck() works with check_args_str()",{
   "myFunction found 3 errors:\n    Error dude: 'nll' was NULL.\n    Error type_numeric: 'char_vec' did not have the right type, as checked with is.numeric().\n    ...",
   fixed = TRUE)
 
+  # Test when using check_arg or other random functions and objects
+
+  # Using check_arg by accident
+  expect_error(multicheck(
+    mate = check_arg(arg = NULL),
+    dude = check_arg(arg = nll, allow_null = FALSE),
+    type_numeric = check_arg(arg = char_vec, type_check_fn = is.numeric),
+    type_character = check_arg(arg = float_vec, type_check_fn = is.character),
+    context = "myFunction",
+    first_n = 2
+  ),
+  "'nll' was NULL.",
+  fixed = TRUE)
+
+  # Different types of objects and functions
+  expect_error(multicheck(
+    sum_ = sum(2,3),
+    string = "direct string",
+    fn = check_arg_str,
+    context = "myFunction",
+    first_n = 5
+  ),
+  "myFunction found 3 errors:\n    Error sum_: 5\n    Error string: direct string\n    Error fn: function (..., message_fn = return) \n{\n    check_arg(..., message_fn = message_fn)\n}",
+  fixed = TRUE)
 })
