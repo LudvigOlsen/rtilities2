@@ -30,7 +30,6 @@
 #' x <- c(1,2,3,4,5)
 #' y <- c("a","b","d")
 #' z <- data.frame("o" = c(0,0,0), "u" = c(1,2,3))
-#'
 #' \donttest{
 #' # Reporting tests for all variables at once
 #' # Tip: use check_arg_str
