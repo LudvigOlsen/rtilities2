@@ -8,11 +8,11 @@
 \alias{return_if}
 \title{Simple do-if functions}
 \usage{
-stop_if(condition, message)
+stop_if(condition, message = NULL)
 
-warn_if(condition, message)
+warn_if(condition, message = NULL)
 
-message_if(condition, message)
+message_if(condition, message = NULL)
 
 return_if(condition, x)
 
@@ -21,13 +21,13 @@ do_if(condition, fn, ...)
 \arguments{
 \item{condition}{The condition to check. (Logical)}
 
-\item{message}{Message. (Character)}
+\item{message}{Message. (Character)
+
+Note: If \code{NULL}, the \code{condition} will be used as message.}
 
 \item{x}{Any object.}
 
-\item{fn}{Any function.
-
-E.g. \code{function(){3+5}}}
+\item{fn}{Any function.}
 
 \item{...}{Arguments for \code{fn}.}
 }
