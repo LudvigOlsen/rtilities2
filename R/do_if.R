@@ -19,19 +19,19 @@
 #' When \code{condition} is \code{TRUE}:
 #'
 #' \subsection{stop_if()}{
-#' Throw error with the supplied message.
+#' Throws error with the supplied message.
 #' }
 #' \subsection{warn_if()}{
-#' Throw warning with the supplied message.
+#' Throws warning with the supplied message.
 #' }
 #' \subsection{message_if()}{
-#' Generate message with the supplied message.
+#' Generates message with the supplied message.
 #' }
-#' \subsection{return_if()}{
-#' Return \code{x}.
+#' \subsection{identity_if()}{
+#' Returns \code{x}.
 #' }
 #' \subsection{do_if()}{
-#' Call \code{fn} with the arguments in \code{...} and return the result.
+#' Calls \code{fn} with the arguments in \code{...} and returns the result.
 #' }
 #' @examples
 #' # Attach packages
@@ -136,7 +136,7 @@ message_if <- function(condition, message = NULL){
 
 #' @rdname do_if
 #' @export
-return_if <- function(condition, x){
+identity_if <- function(condition, x){
   if (condition){
     return(x)
   }

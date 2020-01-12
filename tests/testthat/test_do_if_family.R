@@ -17,14 +17,14 @@ test_that("do_if() works",{
                fixed = TRUE)
 })
 
-test_that("return_if() works",{
+test_that("identity_if() works",{
   a <- 0
   fn <- function(x,y){x+y}
-  expect_identical(return_if(a == 0, fn), fn)
-  expect_identical(return_if(a == 0, a), a)
-  expect_equal(return_if(a == 0, a), 0)
-  expect_invisible(return_if(a != 0, a))
-  expect_error(return_if(a == 0),
+  expect_identical(identity_if(a == 0, fn), fn)
+  expect_identical(identity_if(a == 0, a), a)
+  expect_equal(identity_if(a == 0, a), 0)
+  expect_invisible(identity_if(a != 0, a))
+  expect_error(identity_if(a == 0),
                "argument \"x\" is missing, with no default",
                fixed = TRUE)
 })

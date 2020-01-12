@@ -5,7 +5,7 @@
 \alias{stop_if}
 \alias{warn_if}
 \alias{message_if}
-\alias{return_if}
+\alias{identity_if}
 \title{Simple do-if functions}
 \usage{
 stop_if(condition, message = NULL)
@@ -14,7 +14,7 @@ warn_if(condition, message = NULL)
 
 message_if(condition, message = NULL)
 
-return_if(condition, x)
+identity_if(condition, x)
 
 do_if(condition, fn, ...)
 }
@@ -42,19 +42,19 @@ When \code{condition} is \code{FALSE}, they return \code{NULL} invisibly.
 When \code{condition} is \code{TRUE}:
 
 \subsection{stop_if()}{
-Throw error with the supplied message.
+Throws error with the supplied message.
 }
 \subsection{warn_if()}{
-Throw warning with the supplied message.
+Throws warning with the supplied message.
 }
 \subsection{message_if()}{
-Generate message with the supplied message.
+Generates message with the supplied message.
 }
-\subsection{return_if()}{
-Return \code{x}.
+\subsection{identity_if()}{
+Returns \code{x}.
 }
 \subsection{do_if()}{
-Call \code{fn} with the arguments in \code{...} and return the result.
+Calls \code{fn} with the arguments in \code{...} and returns the result.
 }
 }
 \examples{
