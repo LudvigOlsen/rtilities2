@@ -200,9 +200,59 @@ create_name_expectation <- function(data, name) {
                       add_tolerance = FALSE)
 }
 
-collapse_strings <- function(strings){
-  if (length(strings)>1)
-    strings <- paste0(strings, collapse = "")
+create_expect_equal <- function(x, y,
+                                add_tolerance = FALSE,
+                                spaces = 2) {
 
-  strings
+  spaces_string <- create_space_string(n = spaces)
+  if (isTRUE(add_tolerance)) {
+    tolerance_string <- paste0(",\n", spaces_string, "tolerance = 1e-4")
+  } else {
+    tolerance_string <- ""
+  }
+
+  # In case a string has \n, \t, etc.
+  y <- escape_metacharacters(y)
+
+  paste0("expect_equal(\n",
+         spaces_string,
+         x,
+         ",\n",
+         spaces_string,
+         y,
+         tolerance_string,
+         ")")
 }
+
+create_expect_side_effect <- function(x, y,
+                                      side_effect_type = "error",
+                                      spaces = 2) {
+
+  checkmate::assert_choice(x = side_effect_type,
+                           choices = c("error", "warning", "message"))
+
+  spaces_string <- create_space_string(n = spaces)
+
+  expect_fn <- dplyr::case_when(
+    side_effect_type == "error" ~ "expect_error",
+    side_effect_type == "warning" ~ "expect_warning",
+    side_effect_type == "message" ~ "expect_message",
+    TRUE ~ "" # Won't get here anyway
+  )
+
+  y <- escape_metacharacters(y)
+  y <- split_to_paste0(y, spaces = spaces)
+
+  paste0(expect_fn, "(\n",
+         spaces_string,
+         x,
+         ",\n",
+         spaces_string,
+         y,
+         ",\n",
+         spaces_string,
+         "fixed = TRUE",
+         ")")
+}
+
+
