@@ -28,8 +28,6 @@
 #' is_between(5, 1, 5) # FALSE
 #' is_between(5, 1, 5, include_limits = TRUE) # TRUE
 is_between <- function(x, lower, upper, include_limits = FALSE, allow_na = TRUE) {
-
-
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_flag(allow_na, add = assert_collection)
   checkmate::reportAssertions(assert_collection) # Must check allow_na first!
@@ -41,10 +39,9 @@ is_between <- function(x, lower, upper, include_limits = FALSE, allow_na = TRUE)
 
   # Checks if x is between lower and upper
   # Must be single & to work in dplyr::mutate
-  if (isTRUE(include_limits)){
+  if (isTRUE(include_limits)) {
     return(x >= lower & x <= upper)
   } else {
     return(x > lower & x < upper)
   }
-
 }

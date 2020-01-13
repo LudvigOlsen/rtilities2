@@ -2,15 +2,16 @@
 ## --- string utils --- ##
 
 # Collapse list of strings once
-collapse_strings <- function(strings){
-  if (length(strings)>1)
+collapse_strings <- function(strings) {
+  if (length(strings) > 1) {
     strings <- paste0(strings, collapse = "")
+  }
   strings
 }
 
 # Add extra \ before the
 # special metacharacters: \n \r \t \v \f
-escape_metacharacters <- function(string){
+escape_metacharacters <- function(string) {
   # TODO must be a way to do it in one gsub with groups?
   string <- gsub("\n", "\\n", string, fixed = TRUE)
   string <- gsub("\r", "\\r", string, fixed = TRUE)
@@ -22,18 +23,17 @@ escape_metacharacters <- function(string){
 
 # Wrap text every n characters.
 # Rude but useful for long error messages.
-split_string_every <- function(string, per = 60){
+split_string_every <- function(string, per = 60) {
   # https://stackoverflow.com/a/26497700/11832955
   n <- seq(1, nc <- nchar(string), by = per)
-  substring(string, n, c(n[-1]-1, nc))
+  substring(string, n, c(n[-1] - 1, nc))
 }
 
 # Split long string into elements in paste0
-split_to_paste0 <- function(string, per = 60, tolerance = 10, spaces = 2){
-
-  if (nchar(string) > per + tolerance)
+split_to_paste0 <- function(string, per = 60, tolerance = 10, spaces = 2) {
+  if (nchar(string) > per + tolerance) {
     splits <- split_string_every(paste0(string))
-  else {
+  } else {
     return(paste0("\"", string, "\""))
   }
 
@@ -45,6 +45,6 @@ split_to_paste0 <- function(string, per = 60, tolerance = 10, spaces = 2){
 }
 
 # Create string with n spaces
-create_space_string <- function(n = 2){
+create_space_string <- function(n = 2) {
   paste0(rep(" ", n), collapse = "")
 }

@@ -19,9 +19,9 @@
 #' library(rtilities2)
 #'
 #' # Create data frame
-#' df <- data.frame("a" = c(1,2), "b" = c(2,3))
+#' df <- data.frame("a" = c(1, 2), "b" = c(2, 3))
 #' # Create named list
-#' nl <- list("a" = c(1,2), "b" = c(2,3))
+#' nl <- list("a" = c(1, 2), "b" = c(2, 3))
 #'
 #' # Create unique name for the data frame
 #' # As "a" is already in df, it appends a "_"
@@ -33,7 +33,7 @@
 #'
 #' # Using it within a function
 #' # in order not to overwrite a user's column
-#' foo <- function(data){
+#' foo <- function(data) {
 #'   # Create unique temporary name
 #'   tmp_colname <- create_tmp_name(data, ".tmp_index_")
 #'

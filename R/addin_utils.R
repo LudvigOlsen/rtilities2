@@ -3,7 +3,7 @@
 
 # Evaluate string -> apply function -> capture output
 apply_capture <- function(string, fn, envir = NULL) {
-  if (is.null(envir)){
+  if (is.null(envir)) {
     out <- capture.output(fn(eval_string(string)))
   } else {
     out <- capture.output(fn(eval_string(string, envir = envir)))
@@ -13,7 +13,7 @@ apply_capture <- function(string, fn, envir = NULL) {
 
 # parse, eval
 eval_string <- function(string, envir = NULL) {
-  if (is.null(envir)){
+  if (is.null(envir)) {
     out <- eval(parse(text = string))
   } else {
     out <- eval(parse(text = string), envir = envir)
@@ -27,20 +27,21 @@ capture <- function(string) {
 }
 
 # Prepare output for insertion
-prepare_output <- function(string){
+prepare_output <- function(string) {
   paste(paste(string, collapse = "\n"), "\n")
 }
 
 # Insert code at selection with rstudioapi
-insert_code <- function(strings, prepare=TRUE) {
-
+insert_code <- function(strings, prepare = TRUE) {
   assert_collection <- checkmate::makeAssertCollection()
-  checkmate::assert_list(types = "character",
+  checkmate::assert_list(
+    types = "character",
     x = strings,
-    add = assert_collection)
+    add = assert_collection
+  )
   checkmate::reportAssertions(assert_collection)
 
-  if(isTRUE(prepare)){
+  if (isTRUE(prepare)) {
     code <- prepare_output(strings)
   } else {
     code <- strings
@@ -65,13 +66,16 @@ get_selection <- function() {
 
 # split x at each index in pos
 # Found on stackoverflow (TODO check)
-split_at <- function(x, pos){
+split_at <- function(x, pos) {
   pos <- c(1L, pos, length(x) + 1L)
-  Map(function(x, i, j) x[i:j], list(x),
-      head(pos, -1L), tail(pos, -1L) - 1L)}
+  Map(
+    function(x, i, j) x[i:j], list(x),
+    head(pos, -1L), tail(pos, -1L) - 1L
+  )
+}
 
 # Get indices of list elements that are NULL
-get_null_indices <- function(l){
+get_null_indices <- function(l) {
   which(sapply(l, is.null))
 }
 
@@ -81,10 +85,11 @@ get_element_names <- function(l, remove_empty_names = TRUE) {
   l_names <- names(l)
 
   # Remove empty names ""
-  if (length(l_names) > 0 && isTRUE(remove_empty_names)){
-    empty_indices <- which(sapply(l_names, function(x){
-      x == "" || is.null(x)}))
-    if (length(empty_indices) > 0){
+  if (length(l_names) > 0 && isTRUE(remove_empty_names)) {
+    empty_indices <- which(sapply(l_names, function(x) {
+      x == "" || is.null(x)
+    }))
+    if (length(empty_indices) > 0) {
       l_names <- l_names[-empty_indices]
     }
   }
@@ -95,6 +100,8 @@ get_element_names <- function(l, remove_empty_names = TRUE) {
 # For testing a list of string expectations
 # TODO This could be an exported function
 # TODO The error messages should be better
-eval_expectations <- function(l, envir){
-  plyr::l_ply(l,.fun = function(x){eval(parse(text=x), envir = envir)})
+eval_expectations <- function(l, envir) {
+  plyr::l_ply(l, .fun = function(x) {
+    eval(parse(text = x), envir = envir)
+  })
 }

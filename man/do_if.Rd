@@ -68,7 +68,9 @@ stop_if(a == 0, "'a' cannot be 0.")
 warn_if(a == 0, "'a' was 0.")
 message_if(a == 0, "'a' was so kind to be 0.")
 return_if(a == 0, a)
-do_if(a == 0, function(x, y){x + y}, x = 2, y = 10)
+do_if(a == 0, function(x, y) {
+  x + y
+}, x = 2, y = 10)
 }
 }
 \author{

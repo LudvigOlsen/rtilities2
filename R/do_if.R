@@ -43,27 +43,32 @@
 #' warn_if(a == 0, "'a' was 0.")
 #' message_if(a == 0, "'a' was so kind to be 0.")
 #' return_if(a == 0, a)
-#' do_if(a == 0, function(x, y){x + y}, x = 2, y = 10)
+#' do_if(a == 0, function(x, y) {
+#'   x + y
+#' }, x = 2, y = 10)
 #' }
 NULL
 
 # NOTE Aliases only work when building the package
 # so use do_if to see docs
 
-add_condition_prefix <- function(m){
+add_condition_prefix <- function(m) {
   paste0("This was TRUE: ", m)
 }
 
 #' @rdname do_if
 #' @export
-stop_if <- function(condition, message = NULL){
+stop_if <- function(condition, message = NULL) {
 
   # If message is NULL, get condition
-  if (is.null(message)){
+  if (is.null(message)) {
     message <- tryCatch( # Doesn't really work to do this in subfunction
       deparse(
-        substitute(expr = condition,
-                   env = sys.frame(which = sys.nframe()))),
+        substitute(
+          expr = condition,
+          env = sys.frame(which = sys.nframe())
+        )
+      ),
       error = function(e) {
         stop("Cannot use 'condition' as message. Please provide a message.")
       },
@@ -75,7 +80,7 @@ stop_if <- function(condition, message = NULL){
     message <- add_condition_prefix(message)
   }
 
-  if (condition){
+  if (condition) {
     stop(simpleError(message, call = if (p <- sys.parent(1L)) sys.call(p)))
   }
   invisible()
@@ -83,14 +88,17 @@ stop_if <- function(condition, message = NULL){
 
 #' @rdname do_if
 #' @export
-warn_if <- function(condition, message = NULL){
+warn_if <- function(condition, message = NULL) {
 
   # If message is NULL, get condition
-  if (is.null(message)){
+  if (is.null(message)) {
     message <- tryCatch( # Doesn't really work to do this in subfunction
       deparse(
-        substitute(expr = condition,
-                   env = sys.frame(which = sys.nframe()))),
+        substitute(
+          expr = condition,
+          env = sys.frame(which = sys.nframe())
+        )
+      ),
       error = function(e) {
         stop("Cannot use 'condition' as message. Please provide a message.")
       },
@@ -102,7 +110,7 @@ warn_if <- function(condition, message = NULL){
     message <- add_condition_prefix(message)
   }
 
-  if (condition){
+  if (condition) {
     warning(simpleWarning(message, call = if (p <- sys.parent(1L)) sys.call(p)))
   }
   invisible()
@@ -110,14 +118,17 @@ warn_if <- function(condition, message = NULL){
 
 #' @rdname do_if
 #' @export
-message_if <- function(condition, message = NULL){
+message_if <- function(condition, message = NULL) {
 
   # If message is NULL, get condition
-  if (is.null(message)){
+  if (is.null(message)) {
     message <- tryCatch( # Doesn't really work to do this in subfunction
       deparse(
-        substitute(expr = condition,
-                   env = sys.frame(which = sys.nframe()))),
+        substitute(
+          expr = condition,
+          env = sys.frame(which = sys.nframe())
+        )
+      ),
       error = function(e) {
         stop("Cannot use 'condition' as message. Please provide a message.")
       },
@@ -129,7 +140,7 @@ message_if <- function(condition, message = NULL){
     message <- add_condition_prefix(message)
   }
 
-  if (condition){
+  if (condition) {
     message(simpleMessage(message, call = if (p <- sys.parent(1L)) sys.call(p)))
   }
   invisible()
@@ -137,8 +148,8 @@ message_if <- function(condition, message = NULL){
 
 #' @rdname do_if
 #' @export
-identity_if <- function(condition, x, otherwise = invisible()){
-  if (condition){
+identity_if <- function(condition, x, otherwise = invisible()) {
+  if (condition) {
     return(x)
   }
   otherwise
@@ -146,15 +157,13 @@ identity_if <- function(condition, x, otherwise = invisible()){
 
 #' @rdname do_if
 #' @export
-do_if <- function(condition, fn, ..., otherwise = invisible()){
-
+do_if <- function(condition, fn, ..., otherwise = invisible()) {
   assert_collection <- checkmate::makeAssertCollection()
-  checkmate::assert_function(x = fn,  add = assert_collection)
+  checkmate::assert_function(x = fn, add = assert_collection)
   checkmate::reportAssertions(assert_collection)
 
-  if (condition){
+  if (condition) {
     return(fn(...))
   }
   otherwise
 }
-

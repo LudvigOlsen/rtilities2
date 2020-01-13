@@ -29,8 +29,7 @@
 #'   "Hello! I am George.  \n\rDon't call me Frank!",
 #'   "    \tAs that, is, not, my,     name!"
 #' ), remove_spaces = TRUE)
-strip <- function(strings, replacement = "", remove_spaces = FALSE, allow_na = TRUE){
-
+strip <- function(strings, replacement = "", remove_spaces = FALSE, allow_na = TRUE) {
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_flag(allow_na, add = assert_collection)
   checkmate::reportAssertions(assert_collection) # Must check allow_na first!
