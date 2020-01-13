@@ -14,11 +14,11 @@ test_that("expectation are created properly with create_expectations_data_frame(
   current_envir <- sys.frame(which = sys.nframe())
 
   expect_warning(expts <- create_expectations_data_frame(df1),
-                 "Skipped column c.", fixed = TRUE)
+                 "Skipped columns c, d.", fixed = TRUE)
   expts_expected <- list(
     "expect_equal(\n  df1[[\"a\"]],\n  c(1, 2, 3, 4),\n  tolerance = 1e-4)",
     "expect_equal(\n  df1[[\"b\"]],\n  c(\"a\", \"f\", \"g\", \"s\"))",
-    "expect_equal(\n  df1[[\"d\"]],\n  list(a = list(2, 4), b = list(3), c = list(1), d = list(2, 3)))",
+    # "expect_equal(\n  df1[[\"d\"]],\n  list(a = list(2, 4), b = list(3), c = list(1), d = list(2, 3)))",
     "expect_equal(\n  df1[[\"f\"]],\n  structure(1:4, .Label = c(\"1\", \"2\", \"3\", \"4\"), class = \"factor\"))",
     "expect_equal(\n  names( df1 ),\n  c(\"a\", \"b\", \"c\", \"d\", \"f\"))"
   )
@@ -29,7 +29,6 @@ test_that("expectation are created properly with create_expectations_data_frame(
   eval_expectations(expts_expected, envir = current_envir)
 
 })
-
 
 test_that("expectation are created properly with create_expectations_vector()",{
 
@@ -121,5 +120,67 @@ test_that("expectation are created properly with create_expectations_vector()",{
                list("expect_equal(\n  vec_7,\n  list(5, 6, 7, 8))") )
   expect_equal(vec_7, list(5, 6, 7, 8))
 
+
+})
+
+test_that("expectations are created returned by insertExpectationsAddin()",{
+
+  error_fn <- function(){
+    warning("hehe")
+    message("hihi")
+    stop("STOP NOW!")
+  }
+
+  expect_equal(
+    insertExpectationsAddin("error_fn()", insert = FALSE)[[1]],
+    "expect_error(\n  error_fn(),\n  \"STOP NOW!\",\n  fixed = TRUE)",
+    fixed = TRUE
+  )
+
+  msgs_warns_fn <- function(){
+    warning("hehe")
+    message("hihi")
+    warning("ohhh")
+    message("ihhh")
+  }
+
+  expect_equal(
+    insertExpectationsAddin("msgs_warns_fn()", insert = FALSE),
+    list("expect_warning(\n  msgs_warns_fn(),\n  \"hehe\",\n  fixed = TRUE)",
+    "expect_warning(\n  msgs_warns_fn(),\n  \"ohhh\",\n  fixed = TRUE)",
+    "expect_message(\n  msgs_warns_fn(),\n  \"hihi\\n\",\n  fixed = TRUE)",
+    "expect_message(\n  msgs_warns_fn(),\n  \"ihhh\\n\",\n  fixed = TRUE)"),
+    fixed = TRUE
+  )
+
+})
+
+test_that("capture_side_effects() works",{
+
+  # error
+  error_fn <- function(){
+    message("hey")
+    warning("you don't see me")
+    stop("lols I'm an error")
+  }
+
+  err_sfx <- capture_side_effects(error_fn)
+  expect_equal(err_sfx$error, "lols I'm an error", fixed = TRUE)
+  expect_null(err_sfx$warnings)
+  expect_null(err_sfx$messages)
+  expect_true(err_sfx$has_side_effects)
+
+  msgs_warns_fn <- function(){
+    message("hey")
+    warning("you see me??")
+    message("hey again")
+    warning("here I aaam!!")
+  }
+
+  warn_sfx <- capture_side_effects(fn = msgs_warns_fn)
+  expect_null(warn_sfx$error)
+  expect_equal(warn_sfx$warnings, c("you see me??","here I aaam!!"), fixed = TRUE)
+  expect_equal(warn_sfx$messages, c("hey\n", "hey again\n") , fixed = TRUE)
+  expect_true(warn_sfx$has_side_effects)
 
 })

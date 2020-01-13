@@ -12,6 +12,7 @@
 #' @param x Any object.
 #' @param fn Any function.
 #' @param ... Arguments for \code{fn}.
+#' @param otherwise Value to return when \code{condition} is \code{FALSE}.
 #' @author Ludvig Renbo Olsen, \email{r-pkgs@@ludvigolsen.dk}
 #' @details
 #' When \code{condition} is \code{FALSE}, they return \code{NULL} invisibly.
@@ -77,7 +78,7 @@ stop_if <- function(condition, message = NULL){
   if (condition){
     stop(simpleError(message, call = if (p <- sys.parent(1L)) sys.call(p)))
   }
-  invisible(NULL)
+  invisible()
 }
 
 #' @rdname do_if
@@ -104,7 +105,7 @@ warn_if <- function(condition, message = NULL){
   if (condition){
     warning(simpleWarning(message, call = if (p <- sys.parent(1L)) sys.call(p)))
   }
-  invisible(NULL)
+  invisible()
 }
 
 #' @rdname do_if
@@ -131,27 +132,29 @@ message_if <- function(condition, message = NULL){
   if (condition){
     message(simpleMessage(message, call = if (p <- sys.parent(1L)) sys.call(p)))
   }
-  invisible(NULL)
+  invisible()
 }
 
 #' @rdname do_if
 #' @export
-identity_if <- function(condition, x){
+identity_if <- function(condition, x, otherwise = invisible()){
   if (condition){
     return(x)
   }
-  invisible(NULL)
+  otherwise
 }
 
 #' @rdname do_if
 #' @export
-do_if <- function(condition, fn, ...){
-  stop_if(!is.function(fn), "'fn' must be a function.")
+do_if <- function(condition, fn, ..., otherwise = invisible()){
+
+  assert_collection <- checkmate::makeAssertCollection()
+  checkmate::assert_function(x = fn,  add = assert_collection)
+  checkmate::reportAssertions(assert_collection)
+
   if (condition){
     return(fn(...))
   }
-  invisible(NULL)
+  otherwise
 }
 
-
-# extract_error_msg()

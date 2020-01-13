@@ -1,7 +1,10 @@
 create_expectations_data_frame <- function(data, name = NULL) {
 
-  if (!is.data.frame(data))
-    stop("'data' must be a data frame.")
+  assert_collection <- checkmate::makeAssertCollection()
+  checkmate::assert_data_frame(x = data, add = assert_collection)
+  checkmate::assert_string(x = name, min.chars = 1, null.ok = TRUE,
+                           add = assert_collection)
+  checkmate::reportAssertions(assert_collection)
 
   if (is.null(name)){
     name <- deparse(substitute(data))
@@ -11,13 +14,18 @@ create_expectations_data_frame <- function(data, name = NULL) {
   expectations <- plyr::llply(colnames(data), function(col_name) {
     # Get current column
     current_col <- data[[col_name]]
+    if (is.list(current_col))
+      return(NULL)
+
     # Left side of expectation
     x <- paste0(name, "[[\"", col_name, "\"]]")
     # Right side of expectation
     y <- capture.output(dput(current_col))
+    # In case dput spanned multiple lines
+    # we collapse them to one string
+    y <- collapse_strings(y)
 
-    # In case the column contains a list, which we
-    # do not currently support
+    # Sanity check
     if (length(y)>1) {
       return(NULL)
     }
@@ -53,8 +61,11 @@ create_expectations_data_frame <- function(data, name = NULL) {
 # Only split into multiple tests when all elements are named
 create_expectations_vector <- function(data, name = NULL) {
 
-  if (!is.vector(data))
-    stop("'data' must be a vector.")
+  assert_collection <- checkmate::makeAssertCollection()
+  checkmate::assert_vector(x = data, add = assert_collection)
+  checkmate::assert_string(x = name, min.chars = 1, null.ok = TRUE,
+                           add = assert_collection)
+  checkmate::reportAssertions(assert_collection)
 
   if (is.null(name)){
     name <- deparse(substitute(data))
@@ -65,7 +76,8 @@ create_expectations_vector <- function(data, name = NULL) {
 
   # If all elements have names
   # We can test each individually
-  if (length(element_names) > 0 && length(data) == length(element_names)){
+  if (length(element_names) > 0 &&
+      length(data) == length(element_names)){
 
     # Create expect_equal expectations
     expectations <- plyr::llply(element_names, function(elem_name) {
@@ -75,9 +87,11 @@ create_expectations_vector <- function(data, name = NULL) {
       x <- paste0(name, "[[\"", elem_name, "\"]]")
       # Right side of expectation
       y <- capture.output(dput(current_elem))
+      # In case dput spanned multiple lines
+      # we collapse them to one string
+      y <- collapse_strings(y)
 
-      # In case the column contains a list, which we
-      # do not currently support
+      # sanity check
       if (length(y)>1) {
         return(NULL)
       }
@@ -95,6 +109,9 @@ create_expectations_vector <- function(data, name = NULL) {
 
     x <- name
     y <- capture.output(dput(data))
+    # In case dput spanned multiple lines
+    # we collapse them to one string
+    y <- collapse_strings(y)
 
     expectations <- list(
       create_expect_equal(
@@ -124,6 +141,56 @@ create_expectations_vector <- function(data, name = NULL) {
   expectations
 }
 
+create_expectations_side_effect <- function(side_effects, name = NULL){
+
+  assert_collection <- checkmate::makeAssertCollection()
+  checkmate::assert_list(x = side_effects, all.missing = FALSE,
+                         len = 4, add = assert_collection)
+  checkmate::assert_names(x = names(side_effects),
+                          identical.to = c("error", "warnings",
+                                           "messages", "has_side_effects"),
+                          type = "named")
+  checkmate::assert_string(x = name, min.chars = 1, null.ok = TRUE,
+                           add = assert_collection)
+  checkmate::reportAssertions(assert_collection)
+
+  if (is.null(name)){ # TODO Not sure this would work (not used currently)
+    name <- deparse(substitute(side_effects))
+  }
+
+  expectations <- list()
+
+  if (!is.null(side_effects$error)){
+    expectations <- c(expectations, list(
+      create_expect_side_effect(
+        name, side_effects$error, side_effect_type = "error"
+      )
+    ))
+  } else {
+
+    if (!is.null(side_effects$warnings)){
+      expectations <- c(expectations,
+                        plyr::llply(side_effects$warnings, function(w){
+                          create_expect_side_effect(
+                            name, w, side_effect_type = "warning"
+                          )
+                        }))
+    }
+    if (!is.null(side_effects$messages)){
+      expectations <- c(expectations,
+                        plyr::llply(side_effects$messages, function(m){
+                          create_expect_side_effect(
+                            name, m, side_effect_type = "message"
+                          )
+                        }))
+    }
+
+  }
+
+  expectations
+
+}
+
 # returns: expect_equal(names(name), c("a","b"))
 create_name_expectation <- function(data, name) {
   x <- paste("names(", name, ")")
@@ -131,4 +198,11 @@ create_name_expectation <- function(data, name) {
   create_expect_equal(x = x,
                       y = y,
                       add_tolerance = FALSE)
+}
+
+collapse_strings <- function(strings){
+  if (length(strings)>1)
+    strings <- paste0(strings, collapse = "")
+
+  strings
 }

@@ -13,7 +13,7 @@ test_that("do_if() works",{
                "argument \"fn\" is missing, with no default",
                fixed = TRUE)
   expect_error(do_if(a == 0, 2),
-               "'fn' must be a function.",
+               "1 assertions failed:\n * Variable 'fn': Must be a function, not 'double'.",
                fixed = TRUE)
 })
 

@@ -14,9 +14,9 @@ warn_if(condition, message = NULL)
 
 message_if(condition, message = NULL)
 
-identity_if(condition, x)
+identity_if(condition, x, otherwise = invisible())
 
-do_if(condition, fn, ...)
+do_if(condition, fn, ..., otherwise = invisible())
 }
 \arguments{
 \item{condition}{The condition to check. (Logical)}
@@ -26,6 +26,8 @@ do_if(condition, fn, ...)
 Note: If \code{NULL}, the \code{condition} will be used as message.}
 
 \item{x}{Any object.}
+
+\item{otherwise}{Value to return when \code{condition} is \code{FALSE}.}
 
 \item{fn}{Any function.}
 

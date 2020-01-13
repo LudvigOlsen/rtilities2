@@ -3,15 +3,8 @@
 `%c%` <- function(x, n) lapply(x, `[[`, n)
 # From http://stackoverflow.com/questions/5935673/accessing-same-named-list-elements-of-the-list-of-lists-in-r/5936077#5936077
 
-contains_na <- function(v){
+has_na <- function(v){
   sum(is.na(v)) > 0
-}
-
-# Extracts the major and minor version numbers.
-check_R_version <- function(){
-  major <- as.integer(R.Version()$major)
-  minor <- as.numeric(strsplit(R.Version()$minor, ".", fixed = TRUE)[[1]][[1]])
-  list("major" = major, "minor" = minor)
 }
 
 # Skips testthat test, if the R version is below 3.6.0
@@ -21,7 +14,7 @@ check_R_version <- function(){
 # unit tests, but that would take a long time to convert,
 # and most likely the code works the same on v3.5
 skip_test_if_old_R_version <- function(min_R_version = "3.6"){
-  if(check_R_version()[["minor"]] < strsplit(min_R_version, ".", fixed = TRUE)[[1]][[2]]){
+  if(getRversion()$minor < strsplit(min_R_version, ".", fixed = TRUE)[[1]][[2]]){
     testthat::skip(message = paste0("Skipping test as R version is < ", min_R_version, "."))
   }
 }
@@ -30,8 +23,7 @@ skip_test_if_old_R_version <- function(min_R_version = "3.6"){
 # Used for unittests
 # Partly contributed by R. Mark Sharp
 set_seed_for_R_compatibility <- function(seed = 1) {
-  version <- check_R_version()
-  if ((version[["major"]] == 3 && version[["minor"]] >= 6) || version[["major"]] > 3) {
+  if ((getRversion()$major == 3 && getRversion()$minor >= 6) || getRversion()$major > 3) {
     args <- list(seed, sample.kind = "Rounding")
   } else {
     args <- list(seed)
@@ -44,21 +36,6 @@ is_logical_scalar_not_na <- function(arg){
   rlang::is_scalar_logical(arg) && !is.na(arg)
 }
 
-is_between_ <- function(x, a, b) {
-
-  # Checks if x is between a and b
-
-  x > a & x < b
-}
-
-
-# Used for checking warnings in testthat
-# Why?:
-# I had a case where test() used '' but console outputted ‘’
-# So I just strip for punctuation in such cases (Should be used sparingly)
-strip_punctuation <- function(strings){
-  gsub("[[:punct:][:blank:]]+", " ", strings)
-}
 
 # Wraps tibble::add_column
 reposition_column <- function(data, col, .before = NULL, .after = NULL){
@@ -68,4 +45,10 @@ reposition_column <- function(data, col, .before = NULL, .after = NULL){
     tibble::add_column(!!(col) := col_values, .before = .before, .after = .after)
 }
 
+# Remove NAs and empty "" names
+non_empty_names <- function(x){
+  ns <- names(x)
+  ns <- ns[!is.na(ns)]
+  ns[nzchar(ns, keepNA = TRUE)]
+}
 

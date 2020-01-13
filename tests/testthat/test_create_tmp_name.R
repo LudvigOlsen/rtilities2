@@ -15,10 +15,10 @@ test_that("create_tmp_name() works",{
   expect_equal(create_tmp_name(nl, "c"), "c")
 
   expect_error(create_tmp_name(nl, 3),
-               "'name' must be of type character.",
+               "1 assertions failed:\n * Variable 'name': Must be of type 'string', not 'double'.",
                fixed = TRUE)
   expect_error(create_tmp_name(nl, ""),
-               "'name' cannot have a character count of 0.",
+               "1 assertions failed:\n * Variable 'name': Must have at least 1 characters.",
                fixed = TRUE)
   # TODO NA and NULL test
   # expect_error(create_tmp_name(nl, NA),

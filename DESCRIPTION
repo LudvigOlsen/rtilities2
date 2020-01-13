@@ -18,6 +18,7 @@ Imports:
     tibble,
     rlang,
     utils,
+    checkmate,
     lifecycle
 Suggests: 
     knitr,

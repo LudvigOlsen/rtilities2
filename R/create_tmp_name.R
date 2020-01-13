@@ -55,14 +55,12 @@
 #' foo(df)
 create_tmp_name <- function(data, name = ".tmp_") {
 
-  # Check that 'name' is non-empty string
-  check_arg(
-    name,
-    type_check_fn = is.character,
-    type_name = "character",
-    not_length = 0,
-    length_fn = nchar
-  )
+  # Assert input
+  # 'data' can be anything where names() can be used,
+  # so we don't add assertions for that
+  assert_collection <- checkmate::makeAssertCollection()
+  checkmate::assert_string(x = name, min.chars = 1, add = assert_collection)
+  checkmate::reportAssertions(assert_collection)
 
   # Extract non-empty names from 'data'
   data_names <- non_empty_names(data)
