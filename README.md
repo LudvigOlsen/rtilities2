@@ -13,6 +13,9 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 rtilities2 provide a set of utilities and RStudio addins for developing
 R packages.
 
+**Author:** [Ludvig R. Olsen](http://ludvigolsen.dk/) (
+<r-pkgs@ludvigolsen.dk> ) <br/> **Started:** January 2020
+
 ## Addins
 
   - `Insert Expectations` : generates `testthat` `expect_*` tests from
