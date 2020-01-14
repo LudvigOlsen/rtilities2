@@ -21,6 +21,8 @@ R packages.
   - `Insert Expectations` : generates `testthat` `expect_*` tests from
     selected code
   - `dput() selected` : applies `dput()` to selected code
+  - `Insert checkmate AssertCollection code` : inserts code for
+    initializing and reporting a checkmate AssertCollection
   - `Wrap string with paste0` : splits selected string every n
     characters and wraps in `paste0` call
   - `Insert %>%`

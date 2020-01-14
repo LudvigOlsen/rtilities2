@@ -18,3 +18,9 @@ Description: Inserts the wrapped selection.
 Binding: wrapStringAddin
 Interactive: false
 
+Name: Insert checkmate AssertCollection code
+Description: Inserts checkmate AssertCollection initialization and reporting code
+Binding: assertCollectionAddin
+Interactive: false
+
+
