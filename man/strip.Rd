@@ -4,7 +4,13 @@
 \alias{strip}
 \title{Strips strings of non-alphanumeric characters}
 \usage{
-strip(strings, replacement = "", remove_spaces = FALSE, allow_na = TRUE)
+strip(
+  strings,
+  replacement = "",
+  remove_spaces = FALSE,
+  remove_numbers = FALSE,
+  allow_na = TRUE
+)
 }
 \arguments{
 \item{strings}{Vector of strings. (Character)}
@@ -20,7 +26,8 @@ to contain \code{NA}s. (Logical)}
 \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
 \enumerate{
 \item Removes any character that is not alphanumeric or a space.
-\item Reduces multiple consequtive whitespaces to a single whitespace.
+\item (Disabled by default): Remove numbers.
+\item Reduces multiple consequtive whitespaces to a single whitespace and trims ends.
 }
 
 Can for instance be used to simplify error messages before checking them.
@@ -28,7 +35,8 @@ Can for instance be used to simplify error messages before checking them.
 \details{
 \enumerate{
 \item \code{gsub("[^[:alnum:][:blank:]]", replacement, strings))}
-\item \code{gsub("[[:blank:]]+", " ", strings)}
+\item \code{gsub('[0-9]+', '', strings)} (Note: only if specified!)
+\item \code{trimws( gsub("[[:blank:]]+", " ", strings) )}
 (Or \code{""} if \code{remove_spaces} is \code{TRUE})
 }
 }
@@ -36,15 +44,14 @@ Can for instance be used to simplify error messages before checking them.
 # Attach packages
 library(rtilities2)
 
-strip(c(
-  "Hello! I am George.  \n\rDon't call me Frank!",
-  "    \tAs that, is, not, my, name!"
-))
-
-strip(c(
-  "Hello! I am George.  \n\rDon't call me Frank!",
+strings <- c(
+  "Hello! I am George.  \n\rDon't call me Frank! 123",
   "    \tAs that, is, not, my,     name!"
-), remove_spaces = TRUE)
+)
+
+strip(strings)
+strip(strings, remove_spaces = TRUE)
+strip(strings, remove_numbers = TRUE)
 }
 \author{
 Ludvig Renbo Olsen, \email{r-pkgs@ludvigolsen.dk}

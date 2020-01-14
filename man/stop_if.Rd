@@ -6,11 +6,11 @@
 \alias{message_if}
 \title{Simple side effect functions}
 \usage{
-stop_if(condition, message = NULL)
+stop_if(condition, message = NULL, sys.parent.n = 0L)
 
-warn_if(condition, message = NULL)
+warn_if(condition, message = NULL, sys.parent.n = 0L)
 
-message_if(condition, message = NULL)
+message_if(condition, message = NULL, sys.parent.n = 0L)
 }
 \arguments{
 \item{condition}{The condition to check. (Logical)}
@@ -18,6 +18,8 @@ message_if(condition, message = NULL)
 \item{message}{Message. (Character)
 
 Note: If \code{NULL}, the \code{condition} will be used as message.}
+
+\item{sys.parent.n}{The number of generations to go back when calling message function.}
 }
 \description{
 \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}

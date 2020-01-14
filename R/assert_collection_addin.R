@@ -27,6 +27,22 @@
 #'   \code{----}
 #'
 #'  Returns \code{NULL} invisibly.
+#' @details
+#'  \subsection{How to set up a key command in RStudio}{
+#'
+#'  After installing the package.
+#'  Go to:
+#'
+#'  \code{Tools >> Addins >> Browse Addins >> Keyboard Shortcuts}.
+#'
+#'  Find \code{"dput() Selected"} and press its field under \code{Shortcut}.
+#'
+#'  Press desired key command, e.g. \code{Alt+C}.
+#'
+#'  Press \code{Apply}.
+#'
+#'  Press \code{Execute}.
+#'  }
 assertCollectionAddin <- function(add_comments = TRUE){
 
   indentation <- get_indentation()

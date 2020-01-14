@@ -15,6 +15,7 @@
 #' @param message Message. (Character)
 #'
 #'  Note: If \code{NULL}, the \code{condition} will be used as message.
+#' @param sys.parent.n The number of generations to go back when calling message function.
 #' @author Ludvig Renbo Olsen, \email{r-pkgs@@ludvigolsen.dk}
 #' @details
 #' When \code{condition} is \code{FALSE}, they return \code{NULL} invisibly.
@@ -53,31 +54,36 @@ add_condition_prefix <- function(m) {
 
 #' @rdname stop_if
 #' @export
-stop_if <- function(condition, message = NULL) {
-
-  # If message is NULL, get condition
-  if (is.null(message)) {
-    message <- tryCatch( # Doesn't really work to do this in subfunction
-      deparse(
-        substitute(
-          expr = condition,
-          env = sys.frame(which = sys.nframe())
-        )
-      ),
-      error = function(e) {
-        stop("Cannot use 'condition' as message. Please provide a message.")
-      },
-      warning = function(w) {
-        stop("Cannot use 'condition' as message. Please provide a message.")
-      }
-    )
-    # Add "This was TRUE: "
-    message <- add_condition_prefix(message)
-  }
+stop_if <- function(condition, message = NULL, sys.parent.n = 0L) {
 
   if (condition) {
-    stop(simpleError(message, call = if (p <- sys.parent(1L)) sys.call(p)))
+
+    # If message is NULL, get condition
+    if (is.null(message)) {
+      message <- tryCatch( # Doesn't really work to do this in subfunction
+        deparse(
+          substitute(
+            expr = condition,
+            env = sys.frame(which = sys.nframe())
+          )
+        ),
+        error = function(e) {
+          stop("Cannot use 'condition' as message. Please provide a message.")
+        },
+        warning = function(w) {
+          stop("Cannot use 'condition' as message. Please provide a message.")
+        }
+      )
+      # Add "This was TRUE: "
+      message <- add_condition_prefix(message)
+    }
+
+    stop(
+      simpleError(
+        message,
+        call = if (p <- sys.parent(sys.parent.n+1)) sys.call(p)))
   }
+
   invisible()
 }
 
@@ -88,30 +94,34 @@ stop_if <- function(condition, message = NULL) {
 
 #' @rdname stop_if
 #' @export
-warn_if <- function(condition, message = NULL) {
-
-  # If message is NULL, get condition
-  if (is.null(message)) {
-    message <- tryCatch( # Doesn't really work to do this in subfunction
-      deparse(
-        substitute(
-          expr = condition,
-          env = sys.frame(which = sys.nframe())
-        )
-      ),
-      error = function(e) {
-        stop("Cannot use 'condition' as message. Please provide a message.")
-      },
-      warning = function(w) {
-        stop("Cannot use 'condition' as message. Please provide a message.")
-      }
-    )
-    # Add "This was TRUE: "
-    message <- add_condition_prefix(message)
-  }
+warn_if <- function(condition, message = NULL, sys.parent.n = 0L) {
 
   if (condition) {
-    warning(simpleWarning(message, call = if (p <- sys.parent(1L)) sys.call(p)))
+
+    # If message is NULL, get condition
+    if (is.null(message)) {
+      message <- tryCatch( # Doesn't really work to do this in subfunction
+        deparse(
+          substitute(
+            expr = condition,
+            env = sys.frame(which = sys.nframe())
+          )
+        ),
+        error = function(e) {
+          stop("Cannot use 'condition' as message. Please provide a message.")
+        },
+        warning = function(w) {
+          stop("Cannot use 'condition' as message. Please provide a message.")
+        }
+      )
+      # Add "This was TRUE: "
+      message <- add_condition_prefix(message)
+    }
+
+    warning(
+      simpleWarning(
+        message,
+        call = if (p <- sys.parent(sys.parent.n+1)) sys.call(p)))
   }
   invisible()
 }
@@ -123,31 +133,36 @@ warn_if <- function(condition, message = NULL) {
 
 #' @rdname stop_if
 #' @export
-message_if <- function(condition, message = NULL) {
-
-  # If message is NULL, get condition
-  if (is.null(message)) {
-    message <- tryCatch( # Doesn't really work to do this in subfunction
-      deparse(
-        substitute(
-          expr = condition,
-          env = sys.frame(which = sys.nframe())
-        )
-      ),
-      error = function(e) {
-        stop("Cannot use 'condition' as message. Please provide a message.")
-      },
-      warning = function(w) {
-        stop("Cannot use 'condition' as message. Please provide a message.")
-      }
-    )
-    # Add "This was TRUE: "
-    message <- add_condition_prefix(message)
-  }
+message_if <- function(condition, message = NULL, sys.parent.n = 0L) {
 
   if (condition) {
-    message(simpleMessage(message, call = if (p <- sys.parent(1L)) sys.call(p)))
+
+    # If message is NULL, get condition
+    if (is.null(message)) {
+      message <- tryCatch( # Doesn't really work to do this in subfunction
+        deparse(
+          substitute(
+            expr = condition,
+            env = sys.frame(which = sys.nframe())
+          )
+        ),
+        error = function(e) {
+          stop("Cannot use 'condition' as message. Please provide a message.")
+        },
+        warning = function(w) {
+          stop("Cannot use 'condition' as message. Please provide a message.")
+        }
+      )
+      # Add "This was TRUE: "
+      message <- add_condition_prefix(message)
+    }
+
+    message(
+      simpleMessage(
+        message,
+        call = if (p <- sys.parent(sys.parent.n + 1)) sys.call(p)))
   }
+
   invisible()
 }
 

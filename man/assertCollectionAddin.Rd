@@ -37,6 +37,23 @@ Inserts code for initializing and reporting a
 
 See \code{Details} for how to set a key command.
 }
+\details{
+\subsection{How to set up a key command in RStudio}{
+
+After installing the package.
+Go to:
+
+\code{Tools >> Addins >> Browse Addins >> Keyboard Shortcuts}.
+
+Find \code{"dput() Selected"} and press its field under \code{Shortcut}.
+
+Press desired key command, e.g. \code{Alt+C}.
+
+Press \code{Apply}.
+
+Press \code{Execute}.
+}
+}
 \author{
 Ludvig Renbo Olsen, \email{r-pkgs@ludvigolsen.dk}
 }
