@@ -13,7 +13,8 @@ strip(strings, replacement = "", remove_spaces = FALSE, allow_na = TRUE)
 
 \item{remove_spaces}{Whether to remove all whitespaces. (Logical)}
 
-\item{allow_na}{Whether to allow \code{strings} to contain \code{NA}s. (Logical)}
+\item{allow_na}{Whether to allow \code{strings}
+to contain \code{NA}s. (Logical)}
 }
 \description{
 \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
@@ -27,7 +28,8 @@ Can for instance be used to simplify error messages before checking them.
 \details{
 \enumerate{
 \item \code{gsub("[^[:alnum:][:blank:]]", replacement, strings))}
-\item \code{gsub("[[:blank:]]+", " ", strings)} (Or \code{""} if \code{remove_spaces} is \code{TRUE})
+\item \code{gsub("[[:blank:]]+", " ", strings)}
+(Or \code{""} if \code{remove_spaces} is \code{TRUE})
 }
 }
 \examples{

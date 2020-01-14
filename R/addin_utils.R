@@ -27,22 +27,24 @@ capture <- function(string) {
 }
 
 # Prepare output for insertion
-prepare_output <- function(string, trim_right = TRUE) {
+prepare_output <- function(string, indentation = 0, trim_right = FALSE) {
 
-  string <- paste(paste(string, collapse = "\n"), "\n")
+  spaces_string <- create_space_string(n = indentation)
+
+  string <- paste(string, collapse = paste0("\n", spaces_string))
   if (isTRUE(trim_right))
     string <- trimws(string, which="right")
   string
 }
 
 # Insert code at selection with rstudioapi
-insert_code <- function(strings, prepare = TRUE) {
+insert_code <- function(strings, prepare = TRUE, indentation = 0) {
 
   stop_if(!(is.list(strings) || is.character(strings)),
           "strings should be either a list or a character vector.")
 
   if (isTRUE(prepare)) {
-    code <- prepare_output(strings)
+    code <- prepare_output(strings, indentation = indentation)
   } else {
     code <- strings
   }
@@ -63,6 +65,16 @@ get_selection <- function() {
   }
   selection
 }
+
+# Get user's selection. Warn if empty.
+get_indentation <- function() {
+  # Get context
+  context <- rstudioapi::getActiveDocumentContext()
+  # Get the column of the beginning of the selection
+  context$selection[[1]]$range$start[[2]] - 1 # starts at 1
+}
+
+
 
 # split x at each index in pos
 # Found on stackoverflow (TODO check)

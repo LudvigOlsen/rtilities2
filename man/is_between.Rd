@@ -13,7 +13,8 @@ is_between(x, lower, upper, include_limits = FALSE, allow_na = TRUE)
 
 \item{upper}{Upper limit. (Numeric)}
 
-\item{include_limits}{Whether to include limits in the allowed values for \code{x}. (Logical)}
+\item{include_limits}{Whether to include limits in
+the allowed values for \code{x}. (Logical)}
 
 \item{allow_na}{Whether to allow \code{x} to contain \code{NA}s.}
 }

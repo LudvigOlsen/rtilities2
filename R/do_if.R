@@ -4,7 +4,8 @@
 #' @description
 #'  \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
 #'
-#'  If the \code{condition} is \code{TRUE}, do something with the supplied object.
+#'  If the \code{condition} is \code{TRUE},
+#'  do something with the supplied object.
 #' @param condition The condition to check. (Logical)
 #' @param message Message. (Character)
 #'

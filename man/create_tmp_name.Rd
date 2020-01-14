@@ -7,11 +7,13 @@
 create_tmp_name(data, name = ".tmp_")
 }
 \arguments{
-\item{data}{Any data structure where names can be accessed with \code{\link[base:names]{names()}}.
+\item{data}{Any data structure where names can be
+accessed with \code{\link[base:names]{names()}}.
 E.g. a data frame or list.}
 
 \item{name}{Initial name to try.
-If it's already in \code{data}, an underscore will be appended until it is unique.}
+If it's already in \code{data}, an underscore will be
+appended until it is unique.}
 }
 \value{
 Name not already in \code{data}.

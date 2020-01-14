@@ -4,7 +4,7 @@
 \alias{insertExpectationsAddin}
 \title{Creates testthat tests for selected code}
 \usage{
-insertExpectationsAddin(selection = NULL, insert = TRUE)
+insertExpectationsAddin(selection = NULL, insert = TRUE, indentation = 0)
 }
 \arguments{
 \item{selection}{String of code. (Character)
@@ -14,12 +14,18 @@ E.g. \code{"stop('This gives an expect_error test')"}.
 N.B. Mainly intended for testing the addin programmatically.}
 
 \item{insert}{Whether to insert the expectations via
-\code{\link[rstudioapi:insertText]{rstudioapi::insertText()}} or return them. (Logical)
+\code{\link[rstudioapi:insertText]{rstudioapi::insertText()}}
+or return them. (Logical)
+
+N.B. Mainly intended for testing the addin programmatically.}
+
+\item{indentation}{Indentation of the selection. (Numeric)
 
 N.B. Mainly intended for testing the addin programmatically.}
 }
 \value{
-Inserts \code{\link[testthat:expect_equal]{testthat::expect_*}} unit tests for the selected code.
+Inserts \code{\link[testthat:expect_equal]{testthat::expect_*}}
+unit tests for the selected code.
 
 Returns \code{NULL} invisibly.
 }
@@ -32,7 +38,8 @@ it will create an \code{\link[testthat:expect_equal]{expect_equal}}
 test for each column,
 along with a test of the column names.
 
-Currently works for data frames, vectors and side effects (errors, warnings, messages).
+Currently works for data frames, vectors
+and side effects (errors, warnings, messages).
 
 List columns (like nested tibbles) are currently skipped.
 
@@ -40,7 +47,8 @@ See \code{Details} for how to set a key command.
 }
 \details{
 \subsection{How}{
-Parses and evaluates the selected code string within the parent environment.
+Parses and evaluates the selected code string
+within the parent environment.
 Depending on the output, it creates a set of unit tests
 (like \code{expect_equal(data[["column"]], c(1,2,3))}),
 and inserts them instead of the selection.

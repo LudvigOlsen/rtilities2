@@ -36,7 +36,8 @@ Note: If \code{NULL}, the \code{condition} will be used as message.}
 \description{
 \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
 
-If the \code{condition} is \code{TRUE}, do something with the supplied object.
+If the \code{condition} is \code{TRUE},
+do something with the supplied object.
 }
 \details{
 When \code{condition} is \code{FALSE}, they return \code{NULL} invisibly.

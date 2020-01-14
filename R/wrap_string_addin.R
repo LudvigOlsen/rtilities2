@@ -6,6 +6,9 @@
 #' @param selection String of code. (Character)
 #'
 #'  N.B. Mainly intended for testing the addin programmatically.
+#' @param indentation Indentation of the selection. (Numeric)
+#'
+#'  N.B. Mainly intended for testing the addin programmatically.
 #' @param insert Whether to insert the wrapped text via
 #'  \code{\link[rstudioapi:insertText]{rstudioapi::insertText()}}
 #'  or return it. (Logical)
@@ -33,28 +36,29 @@
 #'
 #'  Press \code{Execute}.
 #'  }
-wrapStringAddin <- function(selection = NULL, insert = TRUE) {
+wrapStringAddin <- function(selection = NULL, insert = TRUE, indentation = 0) {
 
   # Add asserts
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_string(x = selection, null.ok = TRUE,
                            add = assert_collection)
   checkmate::assert_flag(x = insert, add = assert_collection)
+  checkmate::assert_number(x = indentation, lower = 0,
+                           add = assert_collection)
   checkmate::reportAssertions(assert_collection)
 
-  # Get the selected variable name
-  # either from argument or from selection
-  selection <- do_if(is.null(selection),
-                     fn = get_selection,
-                     otherwise = selection
-  )
+  # Get the selection and indentation
+    if (is.null(selection)){
+    selection <- get_selection()
+    indentation <- get_indentation()
+  }
 
   # Get parent environment
   parent_envir <- parent.frame()
 
   if (selection != "") {
 
-    wrapped <- split_to_paste0(selection)
+    wrapped <- split_to_paste0(selection, spaces = indentation)
 
     if (!isTRUE(insert)) {
       # Return the wrapped string instead of inserting it

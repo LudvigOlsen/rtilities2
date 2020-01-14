@@ -1,4 +1,4 @@
-create_expectations_data_frame <- function(data, name = NULL) {
+create_expectations_data_frame <- function(data, name = NULL, indentation = 0) {
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_data_frame(x = data, add = assert_collection)
   checkmate::assert_string(
@@ -33,7 +33,7 @@ create_expectations_data_frame <- function(data, name = NULL) {
     }
 
     # Create expect_equal text
-    create_expect_equal(x, y, add_tolerance = is.numeric(current_col))
+    create_expect_equal(x, y, add_tolerance = is.numeric(current_col), spaces = 2 + indentation)
   })
 
   # Append name expectation
@@ -60,13 +60,15 @@ create_expectations_data_frame <- function(data, name = NULL) {
 }
 
 # Only split into multiple tests when all elements are named
-create_expectations_vector <- function(data, name = NULL) {
+create_expectations_vector <- function(data, name = NULL, indentation = 0) {
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_vector(x = data, add = assert_collection)
   checkmate::assert_string(
     x = name, min.chars = 1, null.ok = TRUE,
     add = assert_collection
   )
+  checkmate::assert_number(x = indentation, lower = 0,
+                           add = assert_collection)
   checkmate::reportAssertions(assert_collection)
 
   if (is.null(name)) {
@@ -99,7 +101,7 @@ create_expectations_vector <- function(data, name = NULL) {
       }
 
       # Create expect_equal text
-      create_expect_equal(x, y, add_tolerance = is.numeric(current_elem))
+      create_expect_equal(x, y, add_tolerance = is.numeric(current_elem), spaces = indentation + 2)
     })
 
     # Append name expectation
@@ -115,7 +117,8 @@ create_expectations_vector <- function(data, name = NULL) {
     expectations <- list(
       create_expect_equal(
         x, y,
-        add_tolerance = is.numeric(data)
+        add_tolerance = is.numeric(data),
+        spaces = indentation + 2
       )
     )
   }
@@ -140,7 +143,7 @@ create_expectations_vector <- function(data, name = NULL) {
   expectations
 }
 
-create_expectations_side_effect <- function(side_effects, name = NULL) {
+create_expectations_side_effect <- function(side_effects, name = NULL, indentation = 0) {
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_list(
     x = side_effects, all.missing = FALSE,
@@ -170,7 +173,8 @@ create_expectations_side_effect <- function(side_effects, name = NULL) {
     expectations <- c(expectations, list(
       create_expect_side_effect(
         name, side_effects$error,
-        side_effect_type = "error"
+        side_effect_type = "error",
+        spaces = 2 + indentation
       )
     ))
   } else {
@@ -180,7 +184,8 @@ create_expectations_side_effect <- function(side_effects, name = NULL) {
         plyr::llply(side_effects$warnings, function(w) {
           create_expect_side_effect(
             name, w,
-            side_effect_type = "warning"
+            side_effect_type = "warning",
+            spaces = 2 + indentation
           )
         })
       )
@@ -191,7 +196,8 @@ create_expectations_side_effect <- function(side_effects, name = NULL) {
         plyr::llply(side_effects$messages, function(m) {
           create_expect_side_effect(
             name, m,
-            side_effect_type = "message"
+            side_effect_type = "message",
+            spaces = 2 + indentation
           )
         })
       )
@@ -215,7 +221,10 @@ create_name_expectation <- function(data, name) {
 create_expect_equal <- function(x, y,
                                 add_tolerance = FALSE,
                                 spaces = 2) {
+
+  # Create string of spaces
   spaces_string <- create_space_string(n = spaces)
+
   if (isTRUE(add_tolerance)) {
     tolerance_string <- paste0(",\n", spaces_string, "tolerance = 1e-4")
   } else {

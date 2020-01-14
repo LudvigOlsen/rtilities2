@@ -4,7 +4,7 @@
 \alias{wrapStringAddin}
 \title{Wraps the selection with paste0}
 \usage{
-wrapStringAddin(selection = NULL, insert = TRUE)
+wrapStringAddin(selection = NULL, insert = TRUE, indentation = 0)
 }
 \arguments{
 \item{selection}{String of code. (Character)
@@ -12,7 +12,12 @@ wrapStringAddin(selection = NULL, insert = TRUE)
 N.B. Mainly intended for testing the addin programmatically.}
 
 \item{insert}{Whether to insert the wrapped text via
-\code{\link[rstudioapi:insertText]{rstudioapi::insertText()}} or return it. (Logical)
+\code{\link[rstudioapi:insertText]{rstudioapi::insertText()}}
+or return it. (Logical)
+
+N.B. Mainly intended for testing the addin programmatically.}
+
+\item{indentation}{Indentation of the selection. (Numeric)
 
 N.B. Mainly intended for testing the addin programmatically.}
 }
@@ -35,7 +40,8 @@ Go to:
 
 \code{Tools >> Addins >> Browse Addins >> Keyboard Shortcuts}.
 
-Find \code{"Insert Expectations"} and press its field under \code{Shortcut}.
+Find \code{"Insert Expectations"} and press its
+field under \code{Shortcut}.
 
 Press desired key command, e.g. \code{Alt+P}.
 

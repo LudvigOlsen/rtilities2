@@ -16,7 +16,7 @@ test_that("wrapStringAddin() works", {
 
   expect_equal(wrapStringAddin(selection=s1, insert = FALSE),
                paste0("paste0(\"\\fdjslf fdsnm dshfjskdh \\ sdjkfshk\\usjdfu fdsjh",
-                      "ksdfkjh\\asjhd\",\n         \"akjshfjdkahsjkdja\\\\\\\")"))
+                      "ksdfkjh\\asjhd\",\n       \"akjshfjdkahsjkdja\\\\\\\")"))
 
   s2 <- paste0("\\fdjslf fdsnm dshfjskdh \\ sdjkfshk\\usjdfu fdsjhksdfkjh",
                "\\asjh\\dakjshfjdkahsjkdja\\\\\\")

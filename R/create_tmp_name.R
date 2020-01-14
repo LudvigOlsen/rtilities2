@@ -7,10 +7,12 @@
 #'
 #'  Use case: Adding a temporary index column to a data frame within
 #'  a function, where you don't want to overwrite an existing column.
-#' @param data Any data structure where names can be accessed with \code{\link[base:names]{names()}}.
+#' @param data Any data structure where names can be
+#'  accessed with \code{\link[base:names]{names()}}.
 #'  E.g. a data frame or list.
 #' @param name Initial name to try.
-#'  If it's already in \code{data}, an underscore will be appended until it is unique.
+#'  If it's already in \code{data}, an underscore will be
+#'  appended until it is unique.
 #' @author Ludvig Renbo Olsen, \email{r-pkgs@@ludvigolsen.dk}
 #' @export
 #' @return Name not already in \code{data}.

@@ -4,10 +4,28 @@
 \alias{dputSelectedAddin}
 \title{Replaces selected code with its dput() output}
 \usage{
-dputSelectedAddin()
+dputSelectedAddin(selection = NULL, insert = TRUE, indentation = 0)
+}
+\arguments{
+\item{selection}{String of code. (Character)
+
+E.g. \code{"stop('This gives an expect_error test')"}.
+
+N.B. Mainly intended for testing the addin programmatically.}
+
+\item{insert}{Whether to insert the expectations via
+\code{\link[rstudioapi:insertText]{rstudioapi::insertText()}}
+or return them. (Logical)
+
+N.B. Mainly intended for testing the addin programmatically.}
+
+\item{indentation}{Indentation of the selection. (Numeric)
+
+N.B. Mainly intended for testing the addin programmatically.}
 }
 \value{
-Inserts the output of running \code{\link[base:dput]{dput()}} on the selected code.
+Inserts the output of running
+\code{\link[base:dput]{dput()}} on the selected code.
 
 Does not return anything.
 }

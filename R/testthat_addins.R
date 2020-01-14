@@ -18,6 +18,9 @@
 #'  E.g. \code{"stop('This gives an expect_error test')"}.
 #'
 #'  N.B. Mainly intended for testing the addin programmatically.
+#' @param indentation Indentation of the selection. (Numeric)
+#'
+#'  N.B. Mainly intended for testing the addin programmatically.
 #' @param insert Whether to insert the expectations via
 #'  \code{\link[rstudioapi:insertText]{rstudioapi::insertText()}}
 #'  or return them. (Logical)
@@ -54,19 +57,20 @@
 #'  }
 #' @importFrom utils capture.output head tail
 #' @importFrom rlang :=
-insertExpectationsAddin <- function(selection = NULL, insert = TRUE) {
+insertExpectationsAddin <- function(selection = NULL, insert = TRUE, indentation = 0) {
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_string(x = selection, null.ok = TRUE,
                            add = assert_collection)
   checkmate::assert_flag(x = insert, add = assert_collection)
+  checkmate::assert_number(x = indentation, lower = 0,
+                           add = assert_collection)
   checkmate::reportAssertions(assert_collection)
 
-  # Get the selected variable name
-  # either from argument or from selection
-  selection <- do_if(is.null(selection),
-    fn = get_selection,
-    otherwise = selection
-  )
+  # Get the selection and indentation
+  if (is.null(selection)){
+    selection <- get_selection()
+    indentation <- get_indentation()
+  }
 
   # Get parent environment
   parent_envir <- parent.frame()
@@ -81,7 +85,7 @@ insertExpectationsAddin <- function(selection = NULL, insert = TRUE) {
 
       # Create expectations for error, warnings, and messages
       expectations <- create_expectations_side_effect(
-        side_effects, name = selection)
+        side_effects, name = selection, indentation = indentation)
     } else {
 
       # Get data frame object
@@ -89,9 +93,11 @@ insertExpectationsAddin <- function(selection = NULL, insert = TRUE) {
 
       # Create expectations based on the type of the objects
       if (is.data.frame(obj)) {
-        expectations <- create_expectations_data_frame(obj, name = selection)
+        expectations <- create_expectations_data_frame(obj, name = selection,
+                                                       indentation = indentation)
       } else if (is.vector(obj)) {
-        expectations <- create_expectations_vector(obj, name = selection)
+        expectations <- create_expectations_vector(obj, name = selection,
+                                                   indentation = indentation)
       } else {
         stop("The selection is not of a currently supported class.")
       }
