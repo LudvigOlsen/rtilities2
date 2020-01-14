@@ -30,9 +30,12 @@ R packages.
 ## Main functions
 
   - `stop_if()`, `warn_if()`, `message_if()`
+  - `strip()`
+  - `strip_msg()`
+  - `capture_side_effects()`
+  - `capture_parse_eval_side_effects()`
   - `is_between()`
   - `%ni%` (read “not in”)
-  - `strip()`
 
 ## Installation
 

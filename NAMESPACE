@@ -2,6 +2,7 @@
 
 export("%ni%")
 export(assertCollectionAddin)
+export(capture_parse_eval_side_effects)
 export(capture_side_effects)
 export(create_tmp_name)
 export(dputSelectedAddin)

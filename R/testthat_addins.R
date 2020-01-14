@@ -100,7 +100,7 @@ insertExpectationsAddin <- function(selection = NULL, insert = TRUE, indentation
   if (selection != "") {
 
     # Check for side effects
-    side_effects <- get_side_effects(selection, parent_envir)
+    side_effects <- capture_parse_eval_side_effects(selection, parent_envir)
     has_side_effects <- side_effects[["has_side_effects"]]
 
     if (isTRUE(has_side_effects)) {

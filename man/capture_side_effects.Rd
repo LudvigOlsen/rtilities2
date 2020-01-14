@@ -4,9 +4,26 @@
 \alias{capture_side_effects}
 \title{Capture side effects}
 \usage{
-capture_side_effects(fn)
+capture_side_effects(fn, ...)
+}
+\arguments{
+\item{fn}{Function to evaluate.}
+
+\item{...}{Arguments for \code{fn}.}
+}
+\value{
+Named list with the side effects.
 }
 \description{
-Capture side effects
+Captures errors, warnings, and messages from running a given function.
+
+When the function throws an error, no other side effects are captured.
+
+Simple wrapper for testthat's
+\code{\link[testthat:capture_error]{capture_error()}},
+\code{\link[testthat:capture_warnings]{capture_warnings()}} and
+\code{\link[testthat:capture_messages]{capture_messages()}}.
 }
-\keyword{internal}
+\author{
+Ludvig Renbo Olsen, \email{r-pkgs@ludvigolsen.dk}
+}

@@ -30,13 +30,30 @@ capture <- function(string) {
 }
 
 # Prepare output for insertion
-prepare_output <- function(string, indentation = 0, trim_right = FALSE) {
+prepare_insertion <- function(strings,
+                              indentation = 0,
+                              trim_left = FALSE,
+                              trim_right = FALSE
+                              ) {
 
+  # Create string of spaces
   spaces_string <- create_space_string(n = indentation)
 
-  string <- paste(string, collapse = paste0("\n", spaces_string))
-  if (isTRUE(trim_right))
-    string <- trimws(string, which="right")
+  # Collapse strings
+  string <- paste(strings, collapse = paste0("\n", spaces_string))
+
+  # Trimming
+  to_trim <- dplyr::case_when(
+    isTRUE(trim_left) && isTRUE(trim_right) ~ "both",
+    isTRUE(trim_left) ~ "left",
+    isTRUE(trim_right) ~ "right",
+    TRUE ~ "none"
+  )
+
+  if (to_trim != "none"){
+    string <- trimws(string, which = to_trim)
+  }
+
   string
 }
 
@@ -44,10 +61,10 @@ prepare_output <- function(string, indentation = 0, trim_right = FALSE) {
 insert_code <- function(strings, prepare = TRUE, indentation = 0) {
 
   stop_if(!(is.list(strings) || is.character(strings)),
-          "strings should be either a list or a character vector.")
+          "'strings' should be either a list or a character vector.")
 
   if (isTRUE(prepare)) {
-    code <- prepare_output(strings, indentation = indentation)
+    code <- prepare_insertion(strings, indentation = indentation)
   } else {
     code <- strings
   }
@@ -101,7 +118,7 @@ get_element_names <- function(l, remove_empty_names = TRUE) {
 
   # Remove empty names ""
   if (length(l_names) > 0 && isTRUE(remove_empty_names)) {
-    empty_indices <- which(sapply(l_names, function(x) {
+    empty_indices <- which(sapply(l_names, function(x) { # Todo test which(sapply (could go wrong!)
       x == "" || is.null(x)
     }))
     if (length(empty_indices) > 0) {
