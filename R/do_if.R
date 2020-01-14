@@ -1,19 +1,15 @@
 
-#' @title Simple do-if functions
-#' @name do_if
+#' @title Simple side effect functions
+#' @name stop_if
 #' @description
 #'  \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
 #'
 #'  If the \code{condition} is \code{TRUE},
-#'  do something with the supplied object.
+#'  generate error/warning/message from the supplied message.
 #' @param condition The condition to check. (Logical)
 #' @param message Message. (Character)
 #'
 #'  Note: If \code{NULL}, the \code{condition} will be used as message.
-#' @param x Any object.
-#' @param fn Any function.
-#' @param ... Arguments for \code{fn}.
-#' @param otherwise Value to return when \code{condition} is \code{FALSE}.
 #' @author Ludvig Renbo Olsen, \email{r-pkgs@@ludvigolsen.dk}
 #' @details
 #' When \code{condition} is \code{FALSE}, they return \code{NULL} invisibly.
@@ -29,12 +25,6 @@
 #' \subsection{message_if()}{
 #' Generates message with the supplied message.
 #' }
-#' \subsection{identity_if()}{
-#' Returns \code{x}.
-#' }
-#' \subsection{do_if()}{
-#' Calls \code{fn} with the arguments in \code{...} and returns the result.
-#' }
 #' @examples
 #' # Attach packages
 #' library(rtilities2)
@@ -43,10 +33,6 @@
 #' stop_if(a == 0, "'a' cannot be 0.")
 #' warn_if(a == 0, "'a' was 0.")
 #' message_if(a == 0, "'a' was so kind to be 0.")
-#' return_if(a == 0, a)
-#' do_if(a == 0, function(x, y) {
-#'   x + y
-#' }, x = 2, y = 10)
 #' }
 NULL
 
@@ -57,7 +43,7 @@ add_condition_prefix <- function(m) {
   paste0("This was TRUE: ", m)
 }
 
-#' @rdname do_if
+#' @rdname stop_if
 #' @export
 stop_if <- function(condition, message = NULL) {
 
@@ -87,7 +73,7 @@ stop_if <- function(condition, message = NULL) {
   invisible()
 }
 
-#' @rdname do_if
+#' @rdname stop_if
 #' @export
 warn_if <- function(condition, message = NULL) {
 
@@ -117,7 +103,7 @@ warn_if <- function(condition, message = NULL) {
   invisible()
 }
 
-#' @rdname do_if
+#' @rdname stop_if
 #' @export
 message_if <- function(condition, message = NULL) {
 
@@ -147,8 +133,11 @@ message_if <- function(condition, message = NULL) {
   invisible()
 }
 
-#' @rdname do_if
-#' @export
+# Not sure this is useful
+# It seems to be no different than ifelse
+# Except that it doesn't check types and lengths, etc.
+# So perhaps look into whether it should be a "free" ifelse?
+# Keep internally for now
 identity_if <- function(condition, x, otherwise = invisible()) {
   if (condition) {
     return(x)
@@ -156,8 +145,10 @@ identity_if <- function(condition, x, otherwise = invisible()) {
   otherwise
 }
 
-#' @rdname do_if
-#' @export
+# Not sure this is useful
+# R already has lazy evaluation
+# And it's not easier to read than a simple for loop
+# Keep internally for now
 do_if <- function(condition, fn, ..., otherwise = invisible()) {
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_function(x = fn, add = assert_collection)
