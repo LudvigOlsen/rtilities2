@@ -1,3 +1,9 @@
+
+
+#   __________________ #< 646904aaf54daa74ea9d6d8c40429d96 ># __________________
+#   strip                                                                   ####
+
+
 #' @title Strips strings of non-alphanumeric characters
 #' @description
 #'  \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
@@ -37,6 +43,11 @@ strip <- function(strings,
                   remove_spaces = FALSE,
                   allow_na = TRUE) {
 
+
+##  .................. #< 2adf3d749542993ca3074b95c0f31e8e ># ..................
+##  Argument Asserts                                                        ####
+
+
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_flag(allow_na, add = assert_collection)
   checkmate::reportAssertions(assert_collection) # Must check allow_na first!
@@ -45,6 +56,11 @@ strip <- function(strings,
   checkmate::assert_string(replacement, add = assert_collection)
   checkmate::assert_flag(remove_spaces, add = assert_collection)
   checkmate::reportAssertions(assert_collection)
+
+
+##  .................. #< 43d21464a1012b2a6ace37d658f5a3b6 ># ..................
+##  Code                                                                    ####
+
 
   # # Replace all non-alphanumeric and non-space
   strings <- gsub("[^[:alnum:][:blank:]]", replacement, strings)

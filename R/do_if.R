@@ -1,4 +1,9 @@
 
+
+#   __________________ #< a4e6c4b8d57e42c270d1c97b24c965f8 ># __________________
+#   Do if family                                                            ####
+
+
 #' @title Simple side effect functions
 #' @name stop_if
 #' @description
@@ -43,6 +48,9 @@ add_condition_prefix <- function(m) {
   paste0("This was TRUE: ", m)
 }
 
+#   __________________ #< 137557485c74acc6406cd780ee5b6edb ># __________________
+#   stop_if                                                                 ####
+
 #' @rdname stop_if
 #' @export
 stop_if <- function(condition, message = NULL) {
@@ -72,6 +80,11 @@ stop_if <- function(condition, message = NULL) {
   }
   invisible()
 }
+
+
+#   __________________ #< 80cb7ed785f3edf07e65abebbe27d157 ># __________________
+#   warn_if                                                                 ####
+
 
 #' @rdname stop_if
 #' @export
@@ -103,6 +116,11 @@ warn_if <- function(condition, message = NULL) {
   invisible()
 }
 
+
+#   __________________ #< 0b979d2011c6ffa7f887ce415b9612b1 ># __________________
+#   message_if                                                              ####
+
+
 #' @rdname stop_if
 #' @export
 message_if <- function(condition, message = NULL) {
@@ -133,6 +151,11 @@ message_if <- function(condition, message = NULL) {
   invisible()
 }
 
+
+#   __________________ #< 67ff2c242b343b96414a9f3df8ab7067 ># __________________
+#   identity_if                                                             ####
+
+
 # Not sure this is useful
 # It seems to be no different than ifelse
 # Except that it doesn't check types and lengths, etc.
@@ -144,6 +167,11 @@ identity_if <- function(condition, x, otherwise = invisible()) {
   }
   otherwise
 }
+
+
+#   __________________ #< 53196784009271631dda5f0ea3f9e5da ># __________________
+#   do_if                                                                   ####
+
 
 # Not sure this is useful
 # R already has lazy evaluation

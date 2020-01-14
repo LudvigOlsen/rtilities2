@@ -1,4 +1,9 @@
 
+
+#   __________________ #< d100f37bbaf690da2704c913edfcfb36 ># __________________
+#   Create Tmp Name                                                         ####
+
+
 #' @title Create unique temporary name
 #' @description
 #'  \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
@@ -57,12 +62,22 @@
 #' foo(df)
 create_tmp_name <- function(data, name = ".tmp_") {
 
+
+##  .................. #< dfcd1f1aa893f7d00ee3adc83726aae3 ># ..................
+##  Assert arguments                                                        ####
+
+
   # Assert input
   # 'data' can be anything where names() can be used,
   # so we don't add assertions for that
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_string(x = name, min.chars = 1, add = assert_collection)
   checkmate::reportAssertions(assert_collection)
+
+
+##  .................. #< 1881f521bf35a1c268087ebd0c86e9c4 ># ..................
+##  Create name                                                             ####
+
 
   # Extract non-empty names from 'data'
   data_names <- non_empty_names(data)

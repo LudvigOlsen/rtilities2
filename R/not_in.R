@@ -1,3 +1,9 @@
+
+
+#   __________________ #< 236b56c37017ff9827cc04096429dc23 ># __________________
+#   Not in                                                                  ####
+
+
 #' @title Negated value matching
 #' @description Negated \code{\link[base:match]{\%in\%}}.
 #' @param x Vector with values to be matched.

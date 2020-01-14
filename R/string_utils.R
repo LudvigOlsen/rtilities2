@@ -1,5 +1,8 @@
 
-## --- string utils --- ##
+
+#   __________________ #< 581c92a7122e86b9d99cebb6dbb6b596 ># __________________
+#   String utils                                                            ####
+
 
 # Collapse list of strings once
 collapse_strings <- function(strings) {
@@ -20,6 +23,24 @@ escape_metacharacters <- function(string) {
   string <- gsub("\f", "\\f", string, fixed = TRUE)
   string
 }
+
+add_quotation_marks <- function(string){
+  first <- substr(string, 1, 1)
+  last <- substr(string, nc <- nchar(string), nc)
+  if (first != "\"") string <- paste0("\"", string)
+  if (last != "\"") string <- paste0(string, "\"")
+  string
+}
+
+# Create string with n spaces
+create_space_string <- function(n = 2) {
+  paste0(rep(" ", n), collapse = "")
+}
+
+
+#   __________________ #< d29a5eb0e16cdf89ef5dcf00b1b2ed60 ># __________________
+#   Split/wrap string                                                       ####
+
 
 # Wrap text every n characters.
 # Rude but useful for long error messages.
@@ -44,7 +65,7 @@ split_string_every <- function(string, per = 60) {
   # Move backslashes to next string
   tail_backslashes <- c(
     "", head(tail_backslashes,
-         length(tail_backslashes) - 1))
+             length(tail_backslashes) - 1))
   # Add tail backslashes at beginning of next string
   splits <- paste0(tail_backslashes, splits, final_backslashes)
 
@@ -76,15 +97,3 @@ split_to_paste0 <- function(string, per = 60, tolerance = 10, spaces = 2) {
   )
 }
 
-add_quotation_marks <- function(string){
-  first <- substr(string, 1, 1)
-  last <- substr(string, nc <- nchar(string), nc)
-  if (first != "\"") string <- paste0("\"", string)
-  if (last != "\"") string <- paste0(string, "\"")
-  string
-}
-
-# Create string with n spaces
-create_space_string <- function(n = 2) {
-  paste0(rep(" ", n), collapse = "")
-}

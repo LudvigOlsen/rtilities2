@@ -1,3 +1,9 @@
+
+
+#   __________________ #< ed4c7473dd85498240c6249a56842b5b ># __________________
+#   Insert %>% Addin                                                        ####
+
+
 #' @title Insert pipe
 #' @description RStudio Addin:
 #'  Inserting \code{\link[magrittr:magrittr]{magrittr}} pipe
@@ -25,5 +31,6 @@
 #'  }
 #' @importFrom dplyr %>%
 insertPipeAddin <- function() {
+  # TODO base surrounding spaces on context?
   rstudioapi::insertText("%>% ")
 }

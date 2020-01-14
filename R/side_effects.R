@@ -1,4 +1,8 @@
-# side effects
+
+
+#   __________________ #< 0d3e1cc7677b500a32d83bc726793163 ># __________________
+#   Process side effects                                                    ####
+
 
 #' Capture side effects
 #' @export

@@ -1,5 +1,8 @@
 
-## Utils for addins ##
+
+#   __________________ #< 455d9d59211066f8cdf61f39d7562145 ># __________________
+#   Utils for addins                                                        ####
+
 
 # Evaluate string -> apply function -> capture output
 apply_capture <- function(string, fn, envir = NULL) {

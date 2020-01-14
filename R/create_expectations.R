@@ -1,4 +1,16 @@
+
+
+#   __________________ #< 2451d1703a5d7b006fa4e72e2dcc59ed ># __________________
+#   Create Expectations Data Frame                                          ####
+
+
 create_expectations_data_frame <- function(data, name = NULL, indentation = 0) {
+
+
+##  .................. #< 2271fda988ae80e314ffc80ad1364070 ># ..................
+##  Assert arguments                                                        ####
+
+
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_data_frame(x = data, add = assert_collection)
   checkmate::assert_string(
@@ -6,6 +18,11 @@ create_expectations_data_frame <- function(data, name = NULL, indentation = 0) {
     add = assert_collection
   )
   checkmate::reportAssertions(assert_collection)
+
+
+##  .................. #< 2da3e73be55460e78db79bd7977467c9 ># ..................
+##  Create expectation                                                      ####
+
 
   if (is.null(name)) {
     name <- deparse(substitute(data))
@@ -59,8 +76,19 @@ create_expectations_data_frame <- function(data, name = NULL, indentation = 0) {
   expectations
 }
 
+
+#   __________________ #< 57651c0852811eeaef463b8c09390020 ># __________________
+#   Create expectations vector                                              ####
+
+
 # Only split into multiple tests when all elements are named
 create_expectations_vector <- function(data, name = NULL, indentation = 0) {
+
+
+##  .................. #< 00dc0af83dcb4c3bb7b5e04a48b8bfbb ># ..................
+##  Assert arguments                                                        ####
+
+
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_vector(x = data, add = assert_collection)
   checkmate::assert_string(
@@ -70,6 +98,11 @@ create_expectations_vector <- function(data, name = NULL, indentation = 0) {
   checkmate::assert_number(x = indentation, lower = 0,
                            add = assert_collection)
   checkmate::reportAssertions(assert_collection)
+
+
+##  .................. #< fe958b30a0397775f7e311bcff15a411 ># ..................
+##  Create expectations                                                     ####
+
 
   if (is.null(name)) {
     name <- deparse(substitute(data))
@@ -143,7 +176,18 @@ create_expectations_vector <- function(data, name = NULL, indentation = 0) {
   expectations
 }
 
+
+#   __________________ #< a7adafd5b429db7b53bf49e26d1a7568 ># __________________
+#   Create expectations side effects                                        ####
+
+
 create_expectations_side_effect <- function(side_effects, name = NULL, indentation = 0) {
+
+
+##  .................. #< cdf3aa2ed9d644f88940281a6a5538ac ># ..................
+##  Assert arguments                                                        ####
+
+
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_list(
     x = side_effects, all.missing = FALSE,
@@ -162,6 +206,11 @@ create_expectations_side_effect <- function(side_effects, name = NULL, indentati
     add = assert_collection
   )
   checkmate::reportAssertions(assert_collection)
+
+
+##  .................. #< fb7ea2de323677062692b4fd0bb73e14 ># ..................
+##  Create expectations                                                     ####
+
 
   if (is.null(name)) { # TODO Not sure this would work (not used currently)
     name <- deparse(substitute(side_effects))
@@ -206,6 +255,11 @@ create_expectations_side_effect <- function(side_effects, name = NULL, indentati
 
   expectations
 }
+
+
+#   __________________ #< bccbc6fd9c7ff1b37cd1bcd884f72b0d ># __________________
+#   Utils                                                                   ####
+
 
 # returns: expect_equal(names(name), c("a","b"))
 create_name_expectation <- function(data, name) {

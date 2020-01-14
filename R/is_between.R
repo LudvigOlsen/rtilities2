@@ -1,3 +1,9 @@
+
+
+#   __________________ #< 1fef8412954b3ea18259bdc166f65bba ># __________________
+#   Is between                                                              ####
+
+
 #' @title Is between
 #' @description
 #'  \Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
@@ -32,6 +38,11 @@ is_between <- function(x, lower, upper,
                        include_limits = FALSE,
                        allow_na = TRUE) {
 
+
+##  .................. #< 9bcd6954bf6870eb1f1d3a5d914e221c ># ..................
+##  Check arguments                                                         ####
+
+
   # Add asserts
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_flag(allow_na, add = assert_collection)
@@ -42,6 +53,11 @@ is_between <- function(x, lower, upper,
   checkmate::assert_number(x = upper, add = assert_collection)
   checkmate::assert_flag(x = include_limits, add = assert_collection)
   checkmate::reportAssertions(assert_collection)
+
+
+##  .................. #< 9577807060962f5145649255d9100e94 ># ..................
+##  Check is between                                                        ####
+
 
   # Checks if x is between lower and upper
   # Must be single & to work in dplyr::mutate

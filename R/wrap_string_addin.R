@@ -1,3 +1,9 @@
+
+
+#   __________________ #< 2708eaade73cef523d55b70d4eefdc80 ># __________________
+#   Wrap string addin                                                       ####
+
+
 #' @title Wraps the selection with paste0
 #' @description Splits the selection every n characters
 #'  and inserts it in a \code{\link[base:paste0]{paste0()}} call.
@@ -38,6 +44,11 @@
 #'  }
 wrapStringAddin <- function(selection = NULL, insert = TRUE, indentation = 0) {
 
+
+##  .................. #< ba972bb3fde6730407b73845cacc3613 ># ..................
+##  Assert arguments                                                        ####
+
+
   # Add asserts
   assert_collection <- checkmate::makeAssertCollection()
   checkmate::assert_string(x = selection, null.ok = TRUE,
@@ -47,6 +58,11 @@ wrapStringAddin <- function(selection = NULL, insert = TRUE, indentation = 0) {
                            add = assert_collection)
   checkmate::reportAssertions(assert_collection)
 
+
+##  .................. #< 2b7b1d70203486ee3e9de35889785403 ># ..................
+##  Get selection and context                                               ####
+
+
   # Get the selection and indentation
     if (is.null(selection)){
     selection <- get_selection()
@@ -55,6 +71,11 @@ wrapStringAddin <- function(selection = NULL, insert = TRUE, indentation = 0) {
 
   # Get parent environment
   parent_envir <- parent.frame()
+
+
+##  .................. #< 4a81977d929b0be2b75c983f858a866a ># ..................
+##  Wrap selection                                                          ####
+
 
   if (selection != "") {
 
