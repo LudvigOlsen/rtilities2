@@ -20,21 +20,25 @@ knitr::opts_chunk$set(
 <!--[![CRAN status](https://www.r-pkg.org/badges/version/rtilities2)](https://CRAN.R-project.org/package=rtilities2)-->
 <!-- badges: end -->
 
-The goal of rtilities2 is to ...
+rtilities2 provide a set of utilities and RStudio addins for developing R packages.
+
+## Addins
+
+* `Insert Expectations` : generates `testthat` `expect_*` tests from selected code
+* `dput() selected` : applies `dput()` to selected code
+* `Wrap string with paste0` : splits selected string every n characters and wraps in `paste0` call
+* `Insert %>%` 
+
+## Main functions
+
+* `stop_if()`, `warn_if()`, `message_if()`
+* `is_between()`
+* `%ni%` (read "not in")
+* `strip()`
 
 ## Installation
 
-You can install the released version of rtilities2 from [CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("rtilities2")
+```{r eval=FALSE}
+devtools::install_github("ludvigolsen/rtilities2")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(rtilities2)
-## basic example code
-```
