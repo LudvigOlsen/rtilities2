@@ -27,19 +27,19 @@ capture <- function(string) {
 }
 
 # Prepare output for insertion
-prepare_output <- function(string) {
-  paste(paste(string, collapse = "\n"), "\n")
+prepare_output <- function(string, trim_right = TRUE) {
+
+  string <- paste(paste(string, collapse = "\n"), "\n")
+  if (isTRUE(trim_right))
+    string <- trimws(string, which="right")
+  string
 }
 
 # Insert code at selection with rstudioapi
 insert_code <- function(strings, prepare = TRUE) {
-  assert_collection <- checkmate::makeAssertCollection()
-  checkmate::assert_list(
-    types = "character",
-    x = strings,
-    add = assert_collection
-  )
-  checkmate::reportAssertions(assert_collection)
+
+  stop_if(!(is.list(strings) || is.character(strings)),
+          "strings should be either a list or a character vector.")
 
   if (isTRUE(prepare)) {
     code <- prepare_output(strings)

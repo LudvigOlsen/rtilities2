@@ -26,22 +26,62 @@ escape_metacharacters <- function(string) {
 split_string_every <- function(string, per = 60) {
   # https://stackoverflow.com/a/26497700/11832955
   n <- seq(1, nc <- nchar(string), by = per)
-  substring(string, n, c(n[-1] - 1, nc))
+  splits <- substring(string, n, c(n[-1] - 1, nc))
+
+  # Extract tail backslashes
+  tail_backslashes <- gsub(".*[^\\\\*$]", "", splits, fixed = F)
+
+  # Remove tail backslashes
+  splits <- gsub("\\\\*$", "", splits)
+
+  if (sum(nchar(tail_backslashes)) == 0) return(splits)
+
+  # We don't want to remove the tail slashes
+  # from the last string, so we create a list to easily
+  # join with the others
+  final_backslashes <- c(rep("", n = length(tail_backslashes) - 1),
+                         tail(tail_backslashes, 1))
+  # Move backslashes to next string
+  tail_backslashes <- c(
+    "", head(tail_backslashes,
+         length(tail_backslashes) - 1))
+  # Add tail backslashes at beginning of next string
+  splits <- paste0(tail_backslashes, splits, final_backslashes)
+
+  splits
 }
 
 # Split long string into elements in paste0
 split_to_paste0 <- function(string, per = 60, tolerance = 10, spaces = 2) {
+
+  # We only want to split it if it is too long
   if (nchar(string) > per + tolerance) {
     splits <- split_string_every(paste0(string))
   } else {
-    return(paste0("\"", string, "\""))
+    string <- add_quotation_marks(string)
+    return(string)
   }
 
+  # Create string of spaces (7 is the length of "paste0(" )
   spaces_string <- create_space_string(n = spaces + 7)
+
+  # Format string
+  string <- paste0(
+    paste0(splits, collapse = paste0("\",\n", spaces_string, "\"")))
+  string <- add_quotation_marks(string)
   paste0(
-    "paste0(\"",
-    paste0(splits, collapse = paste0("\",\n", spaces_string, "\"")), "\")"
+    "paste0(",
+    string,
+    ")"
   )
+}
+
+add_quotation_marks <- function(string){
+  first <- substr(string, 1, 1)
+  last <- substr(string, nc <- nchar(string), nc)
+  if (first != "\"") string <- paste0("\"", string)
+  if (last != "\"") string <- paste0(string, "\"")
+  string
 }
 
 # Create string with n spaces

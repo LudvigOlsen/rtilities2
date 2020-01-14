@@ -12,3 +12,9 @@ Name: Insert %>%
 Description: Inserts %>%
 Binding: insertPipeAddin
 Interactive: false
+
+Name: Wrap String with Paste0
+Description: Inserts the wrapped selection.
+Binding: wrapStringAddin
+Interactive: false
+

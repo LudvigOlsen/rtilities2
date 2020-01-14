@@ -10,7 +10,8 @@ test_that("strip() works", {
 
   expect_equal(
     strip(strings),
-    c("Hello I am George Dont call me Frank", " As that is not my name", "", NA, "")
+    c("Hello I am George Dont call me Frank",
+      " As that is not my name", "", NA, "")
   )
   expect_equal(
     strip(strings, remove_spaces = TRUE),

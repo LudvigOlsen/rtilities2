@@ -19,8 +19,8 @@ test_that("expectation are created properly with create_expectations_data_frame(
   expts_expected <- list(
     "expect_equal(\n  df1[[\"a\"]],\n  c(1, 2, 3, 4),\n  tolerance = 1e-4)",
     "expect_equal(\n  df1[[\"b\"]],\n  c(\"a\", \"f\", \"g\", \"s\"))",
-    # "expect_equal(\n  df1[[\"d\"]],\n  list(a = list(2, 4), b = list(3), c = list(1), d = list(2, 3)))",
-    "expect_equal(\n  df1[[\"f\"]],\n  structure(1:4, .Label = c(\"1\", \"2\", \"3\", \"4\"), class = \"factor\"))",
+    paste0("expect_equal(\n  df1[[\"f\"]],\n  structure(1:4, .Label = c",
+           "(\"1\", \"2\", \"3\", \"4\"), class = \"factor\"))"),
     "expect_equal(\n  names( df1 ),\n  c(\"a\", \"b\", \"c\", \"d\", \"f\"))"
   )
   expect_equal(
@@ -99,7 +99,9 @@ test_that("expectation are created properly with create_expectations_vector()", 
     "expect_equal(\n  vec_4[[\"c1\"]],\n  2,\n  tolerance = 1e-4)",
     "expect_equal(\n  vec_4[[\"c2\"]],\n  3,\n  tolerance = 1e-4)",
     "expect_equal(\n  vec_4[[\"c3\"]],\n  30,\n  tolerance = 1e-4)",
-    "expect_equal(\n  names( vec_4 ),\n  c(\"a1\", \"a2\", \"a3\", \"b1\", \"b2\", \"b3\", \"c1\", \"c2\", \"c3\"))"
+    paste0("expect_equal(\n  names( vec_4 ),\n  c(\"a1\", \"a2\", \"a3",
+         "\", \"b1\", \"b2\", \"b3\", \"c1\", \"c2\", \"c3\"))")
+
   )
   expect_equal(
     create_expectations_vector(vec_4),
@@ -122,7 +124,8 @@ test_that("expectation are created properly with create_expectations_vector()", 
   eval_expectations(exp_vec_5, current_envir)
 
   # vec_6
-  exp_vec_6 <- list("expect_equal(\n  vec_6,\n  list(a = list(10, 2, 4), b = list(20, 1, 3), list(2, 3, 30)))")
+  exp_vec_6 <- list(paste0("expect_equal(\n  vec_6,\n  list(a = list(10, 2, 4), b = lis",
+                           "t(20, 1, 3), list(2, 3, 30)))"))
   expect_equal(
     create_expectations_vector(vec_6),
     exp_vec_6
@@ -193,7 +196,11 @@ test_that("capture_side_effects() works", {
 
   warn_sfx <- capture_side_effects(fn = msgs_warns_fn)
   expect_null(warn_sfx$error)
-  expect_equal(warn_sfx$warnings, c("you see me??", "here I aaam!!"), fixed = TRUE)
-  expect_equal(warn_sfx$messages, c("hey\n", "hey again\n"), fixed = TRUE)
+  expect_equal(warn_sfx$warnings,
+               c("you see me??", "here I aaam!!"),
+               fixed = TRUE)
+  expect_equal(warn_sfx$messages,
+               c("hey\n", "hey again\n"),
+               fixed = TRUE)
   expect_true(warn_sfx$has_side_effects)
 })

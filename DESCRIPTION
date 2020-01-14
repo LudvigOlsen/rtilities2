@@ -2,14 +2,15 @@ Package: rtilities2
 Title: Development Utilities
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Ludvig Renbo",
+           family = "Olsen",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           email = "r-pkgs@ludvigolsen.dk")
 Description: Provides development utilities, 
     including RStudio addins for generating unit tests.
 License: GPL-3
+URL: https://github.com/ludvigolsen/rtilities2
+BugReports: https://github.com/ludvigolsen/rtilities2/issues
 Imports: 
     rstudioapi (>= 0.10),
     testthat (>= 2.3.1),

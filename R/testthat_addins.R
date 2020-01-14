@@ -7,7 +7,8 @@
 #'  test for each column,
 #'  along with a test of the column names.
 #'
-#'  Currently works for data frames, vectors and side effects (errors, warnings, messages).
+#'  Currently works for data frames, vectors
+#'  and side effects (errors, warnings, messages).
 #'
 #'  List columns (like nested tibbles) are currently skipped.
 #'
@@ -18,17 +19,20 @@
 #'
 #'  N.B. Mainly intended for testing the addin programmatically.
 #' @param insert Whether to insert the expectations via
-#'  \code{\link[rstudioapi:insertText]{rstudioapi::insertText()}} or return them. (Logical)
+#'  \code{\link[rstudioapi:insertText]{rstudioapi::insertText()}}
+#'  or return them. (Logical)
 #'
 #'  N.B. Mainly intended for testing the addin programmatically.
 #' @author Ludvig Renbo Olsen, \email{r-pkgs@@ludvigolsen.dk}
 #' @export
-#' @return Inserts \code{\link[testthat:expect_equal]{testthat::expect_*}} unit tests for the selected code.
+#' @return Inserts \code{\link[testthat:expect_equal]{testthat::expect_*}}
+#'  unit tests for the selected code.
 #'
 #'  Returns \code{NULL} invisibly.
 #' @details
 #'  \subsection{How}{
-#'  Parses and evaluates the selected code string within the parent environment.
+#'  Parses and evaluates the selected code string
+#'  within the parent environment.
 #'  Depending on the output, it creates a set of unit tests
 #'  (like \code{expect_equal(data[["column"]], c(1,2,3))}),
 #'  and inserts them instead of the selection.
@@ -52,7 +56,8 @@
 #' @importFrom rlang :=
 insertExpectationsAddin <- function(selection = NULL, insert = TRUE) {
   assert_collection <- checkmate::makeAssertCollection()
-  checkmate::assert_string(x = selection, null.ok = TRUE, add = assert_collection)
+  checkmate::assert_string(x = selection, null.ok = TRUE,
+                           add = assert_collection)
   checkmate::assert_flag(x = insert, add = assert_collection)
   checkmate::reportAssertions(assert_collection)
 
@@ -75,7 +80,8 @@ insertExpectationsAddin <- function(selection = NULL, insert = TRUE) {
     if (isTRUE(has_side_effects)) {
 
       # Create expectations for error, warnings, and messages
-      expectations <- create_expectations_side_effect(side_effects, name = selection)
+      expectations <- create_expectations_side_effect(
+        side_effects, name = selection)
     } else {
 
       # Get data frame object

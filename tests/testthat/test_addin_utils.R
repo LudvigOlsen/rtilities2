@@ -48,7 +48,8 @@ test_that("apply_capture() works as expected", {
     apply_capture("a_df", dput, envir = current_envir),
     c(
       "structure(list(a = c(1, 2, 3), b = structure(1:3, .Label = c(\"c\", ",
-      "\"d\", \"e\"), class = \"factor\")), class = \"data.frame\", row.names = c(NA, ",
+      paste0("\"d\", \"e\"), class = \"factor\")), class = \"data.frame\"",
+             ", row.names = c(NA, "),
       "-3L))"
     )
   )
@@ -75,15 +76,18 @@ test_that("eval_string() works as expected", {
 
 test_that("create_expect_equal() works as expected", {
   expect_equal(
-    create_expect_equal(x = "cat", y = "c(1,2,3)", spaces = 5, add_tolerance = FALSE),
+    create_expect_equal(x = "cat", y = "c(1,2,3)",
+                        spaces = 5, add_tolerance = FALSE),
     "expect_equal(\n     cat,\n     c(1,2,3))"
   )
   expect_equal(
-    create_expect_equal(x = "cat", y = "c(1,2,3)", spaces = 3, add_tolerance = FALSE),
+    create_expect_equal(x = "cat", y = "c(1,2,3)",
+                        spaces = 3, add_tolerance = FALSE),
     "expect_equal(\n   cat,\n   c(1,2,3))"
   )
   expect_equal(
-    create_expect_equal(x = "cat", y = "c(1,2,3)", spaces = 2, add_tolerance = TRUE),
+    create_expect_equal(x = "cat", y = "c(1,2,3)",
+                        spaces = 2, add_tolerance = TRUE),
     "expect_equal(\n  cat,\n  c(1,2,3),\n  tolerance = 1e-4)"
   )
 })
