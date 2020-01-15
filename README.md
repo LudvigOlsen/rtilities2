@@ -18,23 +18,13 @@ R packages.
 
 ## Addins
 
-  - `Insert Expectations` : generates `testthat` `expect_*` tests from
-    selected code
-  - `dput() selected` : applies `dput()` to selected code
-  - `Insert checkmate AssertCollection code` : inserts code for
-    initializing and reporting a checkmate AssertCollection
-  - `Wrap string with paste0` : splits selected string every n
-    characters and wraps in `paste0` call
   - `Insert %>%`
 
 ## Main functions
 
   - `stop_if()`, `warn_if()`, `message_if()`
-  - `strip()`
-  - `strip_msg()`
-  - `capture_side_effects()`
-  - `capture_parse_eval_side_effects()`
   - `is_between()`
+  - `create_tmp_name()`
   - `%ni%` (read “not in”)
 
 ## Installation
