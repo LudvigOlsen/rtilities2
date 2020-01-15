@@ -159,7 +159,7 @@ message_if <- function(condition, message = NULL, sys.parent.n = 0L) {
 
     message(
       simpleMessage(
-        message,
+        paste0(message,"\n"),
         call = if (p <- sys.parent(sys.parent.n + 1)) sys.call(p)))
   }
 
