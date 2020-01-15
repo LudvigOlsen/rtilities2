@@ -40,6 +40,7 @@
 #' warn_if(a == 0, "'a' was 0.")
 #' message_if(a == 0, "'a' was so kind to be 0.")
 #' }
+#' @importFrom rlang :=
 NULL
 
 # NOTE Aliases only work when building the package
